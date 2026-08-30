@@ -810,28 +810,24 @@ def test_evaluate_cli_forwards_retrieval_only_flag():
     assert calls == [("questions.jsonl", {"retrieval_only": True})]
 
 
-def test_readme_handoff_is_truthful_and_contains_required_boundaries():
+def test_readme_is_truthful_and_contains_required_boundaries():
     readme = Path("README.md").read_text(encoding="utf-8")
     required = (
-        "两周制硕士个人 AI 应用",
+        "水色遥感预测科研助手",
         "OpenAlex",
         "Unpaywall",
         "CORE",
         "Crossref",
         "不绕过付费墙",
-        "为什么使用确定性工作流而不是完全自主 ReAct",
-        "两周 MVP 未实现",
-        "待本地凭据配置后生成",
-        "20 问评估与六项指标",
+        "受控 Agent",
+        "失败可解释",
+        "合法开放全文",
         "streamlit run web/app.py",
-        "Windows 重建",
-        "核心技术主线",
-        "受控科研 Agent",
-        "辅助能力",
-        "704 是元数据目录",
-        "116 是可定位全文",
-        "不写 Recall、MRR 或问答质量百分比",
-        "不新增全文 provider、OCR、FastAPI",
+        "索引重建",
+        "证据和安全边界",
+        "评估口径",
+        "已知限制",
+        "questions-annotated.jsonl",
     )
     assert all(item in readme for item in required)
     for outdated in ("arXiv API", "Tavily", "Bing"):

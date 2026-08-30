@@ -3,8 +3,6 @@ from __future__ import annotations
 from domain.models import (
     AnswerCitation,
     CitedAnswer,
-    ComparisonReport,
-    ComparisonRow,
     EvidenceChunk,
     ResearchPlan,
     ResearchPlanFinding,
@@ -95,35 +93,6 @@ class FakePlan:
             findings=[ResearchPlanFinding(text="A supported finding", citations=[citation])],
             suggested_steps=["define a reproducible baseline"],
             evidence_sufficient=True,
-        )
-
-
-class FakeCompare:
-    def __init__(self):
-        self.paper_ids = []
-
-    def compare(self, paper_ids):
-        self.paper_ids.append(paper_ids)
-        return ComparisonReport(
-            rows=[
-                ComparisonRow(
-                    paper_id=paper_id,
-                    title=paper_id,
-                    prediction_target="chlorophyll-a",
-                    sensors="Sentinel-2",
-                    study_area="未报告",
-                    time_span="未报告",
-                    sample_size="未报告",
-                    preprocessing="未报告",
-                    models="random forest",
-                    baselines="未报告",
-                    datasets="未报告",
-                    metrics="RMSE",
-                    limitations="未报告",
-                )
-                for paper_id in paper_ids
-            ],
-            synthesis_markdown="Two profiled papers were compared.",
         )
 
 
@@ -408,77 +377,6 @@ def test_agent_compacts_old_dialogue_and_keeps_recent_eight_messages():
     assert len(conversation.messages) == 8
     assert "question 0" in conversation.summary
     assert conversation.messages[-1].tool_name == "evidence_qa"
-
-
-def test_agent_routes_literature_compare_through_registered_skill():
-    qa, plan, compare = FakeQa(), FakePlan(), FakeCompare()
-    model = StructuredModel(
-        {
-            "skill_id": "literature_compare",
-            "rewritten_query": "p1,p2",
-            "scope_updates": {},
-        }
-    )
-    service = ResearchAgentService(
-        model=model,
-        qa_service=qa,
-        plan_service=plan,
-        comparison_service=compare,
-    )
-
-    turn = service.chat("比较 p1 和 p2")
-
-    assert compare.paper_ids == [["p1", "p2"]]
-    assert turn.reply.tool_name == "literature_compare"
-    assert turn.reply.comparison_report is not None
-    assert len(turn.reply.comparison_report.rows) == 2
-    assert turn.state.messages[-1].comparison_report is not None
-
-
-def test_agent_prefers_structured_paper_ids_for_literature_compare():
-    qa, plan, compare = FakeQa(), FakePlan(), FakeCompare()
-    model = StructuredModel(
-        {
-            "skill_id": "literature_compare",
-            "rewritten_query": "compare selected papers",
-            "paper_ids": ["p1", "p2"],
-            "scope_updates": {},
-        }
-    )
-    service = ResearchAgentService(
-        model=model,
-        qa_service=qa,
-        plan_service=plan,
-        comparison_service=compare,
-    )
-
-    service.chat("compare these papers")
-
-    assert compare.paper_ids == [["p1", "p2"]]
-
-
-def test_agent_compare_rejects_unbounded_paper_id_input_without_workflow_call():
-    compare = FakeCompare()
-    model = StructuredModel(
-        {
-            "skill_id": "literature_compare",
-            "rewritten_query": "p1",
-            "scope_updates": {},
-        }
-    )
-    service = ResearchAgentService(
-        model=model,
-        qa_service=FakeQa(),
-        plan_service=FakePlan(),
-        comparison_service=compare,
-    )
-
-    turn = service.chat("只比较一篇")
-
-    assert compare.paper_ids == []
-    assert turn.reply.tool_name == "literature_compare"
-    assert turn.reply.evidence_sufficient is False
-    assert turn.reply.content == "所选论文不足以生成可靠对比。"
 
 
 def test_agent_context_preserves_recent_citation_ids_and_policy():

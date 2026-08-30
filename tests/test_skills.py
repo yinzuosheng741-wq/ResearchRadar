@@ -5,13 +5,12 @@ from agent.skills import DEFAULT_SKILL_REGISTRY, SkillExecutor
 from domain.models import CitedAnswer
 
 
-def test_registry_exposes_only_three_local_skills():
+def test_registry_exposes_only_two_local_skills():
     specs = DEFAULT_SKILL_REGISTRY.list_specs()
 
     assert [spec.skill_id for spec in specs] == [
         "evidence_qa",
         "research_plan",
-        "literature_compare",
     ]
     assert all(spec.max_steps == 1 for spec in specs)
     assert all(spec.fallback_text for spec in specs)
@@ -42,14 +41,6 @@ def test_unknown_skill_is_rejected_before_workflow_call():
 def test_skill_input_schema_is_validated():
     with pytest.raises(ValidationError):
         DEFAULT_SKILL_REGISTRY.validate("evidence_qa", {"query": ""})
-
-
-@pytest.mark.parametrize("paper_ids", [[], ["p1"], ["p1"] * 6])
-def test_literature_compare_accepts_two_to_five_paper_ids(paper_ids):
-    with pytest.raises(ValidationError):
-        DEFAULT_SKILL_REGISTRY.validate(
-            "literature_compare", {"paper_ids": paper_ids}
-        )
 
 
 def test_skill_executor_validates_output_and_returns_declared_fallback():

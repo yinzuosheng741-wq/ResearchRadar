@@ -1,5 +1,3 @@
-from datetime import UTC, datetime
-from datetime import date
 import importlib
 import sys
 
@@ -7,16 +5,10 @@ import pytest
 
 from domain.models import (
     AnswerCitation,
-    ComparisonReport,
-    ComparisonRow,
-    TrendClaim,
-    TrendReport,
 )
 from web.presenters import (
-    comparison_dataframe,
     render_citation,
     status_summary,
-    trend_sections,
 )
 
 
@@ -51,54 +43,6 @@ def test_citation_escapes_markdown_and_html_in_untrusted_text():
     assert "\\*\\*bold\\*\\*" in rendered
 
 
-def _row(title="One"):
-    return ComparisonRow(
-        paper_id="p1", title=title, prediction_target="chlorophyll-a",
-        sensors="Sentinel-2", study_area="未报告", time_span="2020–2024",
-        sample_size="未报告", preprocessing="cloud mask", models="LSTM",
-        baselines="RF", datasets="in-situ", metrics="RMSE", limitations="未报告",
-    )
-
-
-def test_comparison_table_has_exact_task7_columns_and_preserves_missing_values():
-    rows = comparison_dataframe(ComparisonReport(rows=[_row()], synthesis_markdown="ok"))
-    assert list(rows[0]) == list(ComparisonRow.model_fields)
-    assert rows[0]["study_area"] == "未报告"
-    assert rows[0]["sample_size"] == "未报告"
-
-
-def test_comparison_table_escapes_untrusted_cell_text():
-    rows = comparison_dataframe(
-        ComparisonReport(rows=[_row("<script>[paper](javascript:bad)</script>")], synthesis_markdown="ok")
-    )
-    assert "<script>" not in rows[0]["title"]
-    assert "javascript:" not in rows[0]["title"]
-
-
-def test_trends_are_grouped_in_stable_order_with_distinct_suggestion_label():
-    report = TrendReport(
-        generated_at=datetime.now(UTC), new_papers=[], claims=[
-            TrendClaim(kind="suggestion", text="test a transformer"),
-            TrendClaim(kind="direct", text="direct result"),
-            TrendClaim(kind="synthesis", text="combined result"),
-        ],
-    )
-    sections = trend_sections(report)
-    assert list(sections) == ["direct", "synthesis", "suggestion"]
-    assert [sections[k]["label"] for k in sections] == ["直接证据", "综合判断", "研究建议"]
-    assert sections["suggestion"]["claims"] == ["可验证假设：test a transformer"]
-
-
-def test_trends_escape_untrusted_claim_text():
-    report = TrendReport(
-        generated_at=datetime.now(UTC), new_papers=[],
-        claims=[TrendClaim(kind="direct", text="<script>[x](javascript:bad)</script>")],
-    )
-    rendered = trend_sections(report)["direct"]["claims"][0]
-    assert "<script>" not in rendered
-    assert "javascript:" not in rendered
-
-
 def test_status_summary_allows_only_known_integer_counts_and_providers():
     summary = status_summary({
         "metadata_total": 9, "pdf_ready": 4, "parsed": 3, "indexed": 2,
@@ -113,15 +57,15 @@ def test_status_summary_allows_only_known_integer_counts_and_providers():
     }
 
 
-def test_trend_page_labels_profile_scope_and_evidence_layers_are_safe():
+def test_profile_coverage_summary_labels_scope_and_evidence_layers_safely():
     from web.presenters import profile_coverage_summary
 
     rendered = profile_coverage_summary(
         {
             "profile_coverage": {
                 "profiled_papers": 11,
-                "metadata_total": 704,
-                "coverage_ratio": 11 / 704,
+                "metadata_total": 100,
+                "coverage_ratio": 11 / 100,
                 "fulltext_profiled_papers": 10,
                 "fulltext_evidence_papers": 96,
                 "fulltext_coverage_ratio": 10 / 96,
@@ -130,17 +74,15 @@ def test_trend_page_labels_profile_scope_and_evidence_layers_are_safe():
     )
 
     assert rendered["profiled_papers"] == 11
-    assert rendered["metadata_total"] == 704
-    assert rendered["coverage_ratio"] == "1.56%"
+    assert rendered["metadata_total"] == 100
+    assert rendered["coverage_ratio"] == "11.00%"
     assert rendered["fulltext_coverage_ratio"] == "10.42%"
 
 
 class FakeStreamlit:
-    def __init__(self, *, buttons=None, text="", selected=None, chosen_date=None):
+    def __init__(self, *, buttons=None, text=""):
         self.buttons = set(buttons or [])
         self.text = text
-        self.selected = list(selected or [])
-        self.chosen_date = chosen_date or date(2026, 8, 1)
         self.messages = []
         self.session_state = {}
 
@@ -161,8 +103,6 @@ class FakeStreamlit:
     def metric(self, label, value): self._record("metric", f"{label}:{value}")
     def button(self, label, **kwargs): return label in self.buttons
     def text_input(self, label, **kwargs): return self.text
-    def multiselect(self, label, options, **kwargs): return self.selected
-    def date_input(self, label, **kwargs): return self.chosen_date
 
 
 class FakeStatus:
@@ -197,8 +137,6 @@ class EmptyServices:
     def sync(self): self.calls.append(("sync",)); return {"status": "ok"}
     def cited_qa(self, question): self.calls.append(("qa", question)); return None
     def supplement_search(self, query): self.calls.append(("search", query)); return None
-    def compare(self, ids): self.calls.append(("compare", ids)); return None
-    def trend(self, since): self.calls.append(("trend", since)); return None
 
 
 def _all_text(st):
@@ -235,23 +173,15 @@ def test_importing_web_app_without_credentials_constructs_no_services(monkeypatc
     assert module._DEFAULT_SERVICES_CONSTRUCTED == 0
 
 
-def test_all_four_pages_render_actionable_empty_states_without_service_actions():
-    from web.app import (
-        render_comparison_page,
-        render_knowledge_base_page,
-        render_qa_page,
-        render_trend_page,
-    )
+def test_core_pages_render_actionable_empty_states_without_service_actions():
+    from web.app import render_knowledge_base_page, render_qa_page
+
     services = EmptyServices()
-    streamlits = [FakeStreamlit() for _ in range(4)]
+    streamlits = [FakeStreamlit() for _ in range(2)]
     render_knowledge_base_page(streamlits[0], services)
     render_qa_page(streamlits[1], services)
-    render_comparison_page(streamlits[2], services)
-    render_trend_page(streamlits[3], services)
     assert "同步新增论文" in _all_text(streamlits[0])
     assert "输入问题" in _all_text(streamlits[1])
-    assert "至少需要 2 篇" in _all_text(streamlits[2])
-    assert "选择日期" in _all_text(streamlits[3])
     assert services.calls == []
 
 
@@ -302,74 +232,6 @@ def test_insufficient_search_action_survives_streamlit_rerun_without_caching_ans
     streamlit.buttons = {"证据不足时补充检索"}
     render_qa_page(streamlit, services)
     assert services.calls == [("qa", "question one"), ("search", "search question one")]
-
-
-def test_comparison_bounds_and_explicit_action():
-    from web.app import render_comparison_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 6}, "years": {}, "sources": {}, "recent_failures": [],
-        "indexed_papers": [{"paper_id": f"p{i}", "title": f"Paper {i}"} for i in range(6)],
-    }
-    streamlit = FakeStreamlit(selected=["p0"], buttons={"生成对比"})
-    render_comparison_page(streamlit, services)
-    assert services.calls == []
-    assert "请选择 2–5 篇论文" in _all_text(streamlit)
-
-    streamlit = FakeStreamlit(selected=[f"p{i}" for i in range(6)], buttons={"生成对比"})
-    render_comparison_page(streamlit, services)
-    assert services.calls == []
-
-    render_comparison_page(
-        FakeStreamlit(selected=["p0", "p1"], buttons={"生成对比"}), services
-    )
-    assert services.calls == [("compare", ["p0", "p1"])]
-
-
-def test_trend_action_converts_date_to_asia_shanghai_start_of_day():
-    from web.app import render_trend_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 1}, "years": {}, "sources": {},
-        "recent_failures": [], "indexed_papers": [],
-    }
-    render_trend_page(
-        FakeStreamlit(chosen_date=date(2026, 8, 9), buttons={"生成趋势报告"}), services
-    )
-    call = services.calls[0]
-    assert call[0] == "trend"
-    assert call[1].isoformat() == "2026-08-09T00:00:00+08:00"
-
-
-def test_trend_page_renders_verified_claim_citations_with_paper_titles():
-    from domain.models import PaperRecord, ProfileCitation
-    from web.app import render_trend_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 1}, "years": {}, "sources": {},
-        "recent_failures": [], "indexed_papers": [],
-        "papers": [{"paper_id": "p1", "title": "Water Colour Study"}],
-    }
-    services.knowledge_audit = lambda: {"profile_coverage": {}}
-    services.trend = lambda since: TrendReport(
-        generated_at=datetime.now(UTC), new_papers=[PaperRecord.model_construct(paper_id="p1")], claims=[
-            TrendClaim(
-                kind="direct", text="A supported trend.", paper_ids=["p1"],
-                evidence=[ProfileCitation(paper_id="p1", page_number=4, quote="verified quote")],
-            )
-        ],
-    )
-
-    streamlit = FakeStreamlit(buttons={"生成趋势报告"})
-    render_trend_page(streamlit, services)
-
-    rendered = _all_text(streamlit)
-    assert "Water Colour Study" in rendered
-    assert "第 4 页" in rendered
-    assert "verified quote" in rendered
 
 
 def test_operational_exceptions_render_stable_code_not_sensitive_exception():
@@ -478,62 +340,6 @@ def test_resubmitting_same_question_clears_stale_insufficient_search_state():
     assert services.calls == []
 
 
-def test_comparison_profile_error_has_actionable_state():
-    from web.app import render_comparison_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 2}, "years": {}, "sources": {}, "recent_failures": [],
-        "indexed_papers": [{"paper_id": "p1", "title": "One"}, {"paper_id": "p2", "title": "Two"}],
-    }
-    def missing_profile(ids):
-        raise ValueError("comparison_profile_not_found")
-    services.compare = missing_profile
-    streamlit = FakeStreamlit(selected=["p1", "p2"], buttons={"生成对比"})
-    render_comparison_page(streamlit, services)
-    text = _all_text(streamlit)
-    assert "结构化档案不足" in text
-    assert "ui_comparison_failed" not in text
-
-
-def test_comparison_page_reports_running_and_completed_status():
-    from web.app import render_comparison_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 2}, "years": {}, "sources": {}, "recent_failures": [],
-        "indexed_papers": [{"paper_id": "p1", "title": "One"}, {"paper_id": "p2", "title": "Two"}],
-    }
-    services.compare = lambda ids: ComparisonReport(rows=[_row()], synthesis_markdown="supported")
-    streamlit = StatusStreamlit(selected=["p1", "p2"], buttons={"生成对比"})
-    render_comparison_page(streamlit, services)
-
-    assert ("status", "running:正在比较论文并整理证据...") in streamlit.messages
-    assert ("status", "update:论文对比已生成:complete") in streamlit.messages
-
-
-def test_trend_page_reports_running_and_completed_status():
-    from domain.models import PaperRecord
-    from web.app import render_trend_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 1}, "years": {}, "sources": {}, "recent_failures": [],
-        "indexed_papers": [], "papers": [],
-    }
-    services.knowledge_audit = lambda: {}
-    services.trend = lambda since: TrendReport(
-        generated_at=datetime.now(UTC),
-        new_papers=[PaperRecord.model_construct(paper_id="p1")],
-        claims=[],
-    )
-    streamlit = StatusStreamlit(buttons={"生成趋势报告"})
-    render_trend_page(streamlit, services)
-
-    assert ("status", "running:正在分析趋势并整理证据...") in streamlit.messages
-    assert ("status", "update:趋势报告已生成:complete") in streamlit.messages
-
-
 def test_presenter_redacts_urls_paths_credentials_and_traceback_text():
     citation = AnswerCitation(
         chunk_id="c", paper_id="p", title="https://provider.test/x?token=secret",
@@ -544,7 +350,6 @@ def test_presenter_redacts_urls_paths_credentials_and_traceback_text():
     for forbidden in ("provider.test", "secret", "Traceback", "OPENAI_API_KEY", "Admin", "private.pdf"):
         assert forbidden not in rendered
 
-
 def test_presenter_redacts_standalone_underscore_credentials_and_unc_paths():
     citation = AnswerCitation(
         chunk_id="c", paper_id="p", title="CORE_API_KEY=abc123",
@@ -554,33 +359,3 @@ def test_presenter_redacts_standalone_underscore_credentials_and_unc_paths():
     rendered = render_citation(citation)
     for forbidden in ("CORE_API_KEY", "TEST_PLACEHOLDER", "OPENAI_API_KEY", "server", "private", "paper.pdf"):
         assert forbidden not in rendered
-
-
-def test_comparison_citations_resolve_title_from_report_rows():
-    from domain.models import ProfileCitation
-    from web.app import render_comparison_page
-
-    services = EmptyServices()
-    services.knowledge_snapshot = lambda: {
-        "stats": {"metadata_total": 2}, "years": {}, "sources": {}, "recent_failures": [],
-        "indexed_papers": [{"paper_id": "p1", "title": "One"}, {"paper_id": "p2", "title": "Two"}],
-    }
-    services.compare = lambda ids: ComparisonReport(
-        rows=[_row("Resolved Paper Title")], synthesis_markdown="supported",
-        citations=[ProfileCitation(paper_id="p1", page_number=2, quote="evidence")],
-    )
-    streamlit = FakeStreamlit(selected=["p1", "p2"], buttons={"生成对比"})
-    render_comparison_page(streamlit, services)
-    text = _all_text(streamlit)
-    assert "Resolved Paper Title" in text
-    assert "未命名论文" not in text
-
-
-def test_empty_trend_action_uses_snapshot_without_calling_model_service():
-    from web.app import render_trend_page
-
-    services = EmptyServices()
-    streamlit = FakeStreamlit(buttons={"生成趋势报告"})
-    render_trend_page(streamlit, services)
-    assert services.calls == []
-    assert "无新增论文" in _all_text(streamlit)

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import math
-import re
 from time import perf_counter
 from typing import Any, Literal, TypedDict
 
@@ -18,7 +17,6 @@ from domain.models import (
     AnswerCitation,
     AgentDiagnostics,
     CitedAnswer,
-    ComparisonReport,
     ResearchAgentReply,
     ResearchAgentTurn,
     ResearchConversationMessage,
@@ -38,11 +36,10 @@ MAX_TOOL_CALLS = 1
 class ResearchIntent(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    skill_id: Literal["evidence_qa", "research_plan", "literature_compare", "general_chat"] = Field(
+    skill_id: Literal["evidence_qa", "research_plan", "general_chat"] = Field(
         validation_alias=AliasChoices("skill_id", "action")
     )
     rewritten_query: str = Field(min_length=1, max_length=4000)
-    paper_ids: list[str] | None = Field(default=None, max_length=5)
     scope_updates: ResearchScope = Field(default_factory=ResearchScope)
     intent: str | None = None
     queries: list[str] = Field(default_factory=list, max_length=6)
@@ -103,7 +100,6 @@ def build_research_agent_graph(
     model,
     qa_service,
     plan_service,
-    comparison_service=None,
     *,
     skill_registry: SkillRegistry = DEFAULT_SKILL_REGISTRY,
     memory_store=None,
@@ -115,8 +111,6 @@ def build_research_agent_graph(
         handlers["evidence_qa"] = qa_service.answer
     if plan_service is not None and hasattr(plan_service, "plan"):
         handlers["research_plan"] = plan_service.plan
-    if comparison_service is not None and hasattr(comparison_service, "compare"):
-        handlers["literature_compare"] = comparison_service.compare
     executor = SkillExecutor(skill_registry, handlers=handlers)
 
     def route(state: _AgentState) -> dict[str, Any]:
@@ -139,11 +133,6 @@ def build_research_agent_graph(
                         }
                         for citation in message.citations[:8]
                     ],
-                    "comparison_paper_ids": (
-                        [row.paper_id for row in message.comparison_report.rows[:5]]
-                        if message.comparison_report is not None
-                        else []
-                    ),
                 }
                 for message in conversation.messages[-8:]
             ],
@@ -181,12 +170,6 @@ def build_research_agent_graph(
             raw = model.with_structured_output(ResearchIntent).invoke(request)
             decision = ResearchIntent.model_validate(raw)
             planned = plan_query(state["user_text"])
-            planned_skill = {
-                "general_chat": "general_chat",
-                "concept_explanation": "general_chat",
-                "evidence_qa": "evidence_qa",
-                "research_plan": "research_plan",
-            }.get(planned.intent)
             updates = {
                 "intent": planned.intent,
                 "queries": list(planned.queries),
@@ -198,7 +181,7 @@ def build_research_agent_graph(
                     "skill_id": "general_chat",
                     "rewritten_query": planned.normalized_query,
                 })
-            elif planned.intent == "research_plan" and decision.skill_id != "literature_compare":
+            elif planned.intent == "research_plan":
                 updates["skill_id"] = "research_plan"
             decision = decision.model_copy(update=updates)
             route_mode = "model"
@@ -229,15 +212,7 @@ def build_research_agent_graph(
                 ),
             )
         else:
-            if decision.skill_id == "literature_compare":
-                paper_ids = (
-                    decision.paper_ids
-                    if decision.paper_ids is not None
-                    else _parse_paper_ids(decision.rewritten_query)
-                )
-                payload = {"paper_ids": paper_ids}
-            else:
-                payload = {"query": decision.rewritten_query}
+            payload = {"query": decision.rewritten_query}
             execution = executor.execute(decision.skill_id, payload)
             if execution.output is None:
                 reply = ResearchAgentReply(
@@ -258,8 +233,6 @@ def build_research_agent_graph(
                         ),
                         prefix="本地知识库未找到足够的直接证据，以下是未引用本地论文的通用研究建议：",
                     )
-            elif isinstance(execution.output, ComparisonReport):
-                reply = _comparison_reply(execution.output)
             else:
                 answer = CitedAnswer.model_validate(execution.output)
                 reply = _answer_reply(answer)
@@ -284,7 +257,6 @@ def build_research_agent_graph(
             workflow={
                 "evidence_qa": qa_service,
                 "research_plan": plan_service,
-                "literature_compare": comparison_service,
             }.get(decision.skill_id),
             reply=reply,
             route_ms=state.get("route_ms", 0.0),
@@ -309,7 +281,6 @@ class ResearchAgentService:
         model,
         qa_service,
         plan_service,
-        comparison_service=None,
         skill_registry: SkillRegistry = DEFAULT_SKILL_REGISTRY,
         memory_store=None,
     ) -> None:
@@ -318,7 +289,6 @@ class ResearchAgentService:
             model,
             qa_service,
             plan_service,
-            comparison_service,
             skill_registry=skill_registry,
             memory_store=memory_store,
         )
@@ -392,7 +362,6 @@ class ResearchAgentService:
                 content=reply.content,
                 tool_name=reply.tool_name,
                 citations=reply.citations,
-                comparison_report=reply.comparison_report,
                 diagnostics=reply.diagnostics,
             ),
         ]
@@ -487,19 +456,6 @@ def _plan_reply(plan: ResearchPlan) -> ResearchAgentReply:
         citations=citations,
         evidence_sufficient=True,
     )
-
-
-def _comparison_reply(report: ComparisonReport) -> ResearchAgentReply:
-    return ResearchAgentReply(
-        content=report.synthesis_markdown,
-        tool_name="literature_compare",
-        comparison_report=report,
-        evidence_sufficient=bool(report.rows),
-    )
-
-
-def _parse_paper_ids(value: str) -> list[str]:
-    return [item for item in re.split(r"[,，\s]+", value.strip()) if item]
 
 
 def _merge_scope(current: ResearchScope, updates: ResearchScope) -> ResearchScope:

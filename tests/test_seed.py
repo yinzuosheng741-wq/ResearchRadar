@@ -411,8 +411,6 @@ def test_recency_zero_span_current_year_and_missing_year_are_defined(tmp_path):
         (["sync"], "sync"),
         (["stats"], "stats"),
         (["ask", "Which models are used for chlorophyll-a prediction?"], "ask"),
-        (["compare", "--paper-ids", "ID1", "ID2"], "compare"),
-        (["brief", "--since", "2026-07-01"], "brief"),
         (["rebuild-index"], "rebuild-index"),
         (["evaluate", "--dataset", "data/evaluation/questions.jsonl"], "evaluate"),
         (["evaluate-answers", "--dataset", "data/evaluation/answers-annotated.jsonl"], "evaluate-answers"),
@@ -448,14 +446,6 @@ def test_each_command_dispatches_to_only_its_injected_service(tmp_path):
             calls.append(("cited_qa", question))
             return {"answer_markdown": "grounded"}
 
-        def compare(self, paper_ids):
-            calls.append(("compare", paper_ids))
-            return {"rows": []}
-
-        def trend(self, since):
-            calls.append(("trend", since))
-            return {"claims": []}
-
         def rebuild_index(self):
             calls.append(("rebuild",))
             return 3
@@ -476,8 +466,6 @@ def test_each_command_dispatches_to_only_its_injected_service(tmp_path):
         (["sync"], "sync"),
         (["stats"], "stats"),
         (["ask", "question"], "cited_qa"),
-        (["compare", "--paper-ids", "ID1", "ID2"], "compare"),
-        (["brief", "--since", "2026-07-01"], "trend"),
         (["rebuild-index"], "rebuild"),
         (["evaluate", "--dataset", "questions.jsonl"], "evaluate"),
         (["evaluate-answers", "--dataset", "answers.jsonl"], "evaluate_answers"),
@@ -535,18 +523,6 @@ def test_sync_wrapper_sanitizes_operation_exception(monkeypatch):
     result = pipeline.sync_papers()
     assert result == {"status": "sync_failed", "collected": 0, "ingested": 0}
     assert "secret" not in json.dumps(result)
-
-
-def test_brief_date_is_asia_shanghai_start_of_day():
-    captured = []
-
-    class Services:
-        def trend(self, since):
-            captured.append(since)
-            return {"claims": []}
-
-    assert app.run(["brief", "--since", "2026-07-01"], services=Services(), stdout=io.StringIO()) == 0
-    assert captured == [datetime.fromisoformat("2026-07-01T00:00:00+08:00")]
 
 
 def test_stats_reports_only_counts_and_parameterized_provider_aggregation(tmp_path):

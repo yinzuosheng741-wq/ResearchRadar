@@ -7,20 +7,10 @@ import re
 from typing import Any, Mapping
 
 
-COMPARISON_COLUMNS = (
-    "paper_id", "title", "prediction_target", "sensors", "study_area",
-    "time_span", "sample_size", "preprocessing", "models", "baselines",
-    "datasets", "metrics", "limitations",
-)
 STATUS_FIELDS = (
     "metadata_total", "pdf_ready", "parsed", "profiled", "indexed", "abstract_only", "failed",
 )
 PROVIDERS = ("openalex", "unpaywall", "core", "crossref", "semantic_scholar")
-_LABELS = {
-    "direct": "直接证据",
-    "synthesis": "综合判断",
-    "suggestion": "研究建议",
-}
 _MARKDOWN = re.compile(r"([\\`*_{}\[\]()#+.!|>~-])")
 _LINK_SCHEME = re.compile(r"(?i)(?:javascript|data|vbscript)\s*:")
 _URL = re.compile(r"(?i)\bhttps?://[^\s<>()\]\[{}]+")
@@ -82,7 +72,7 @@ def _safe_nonnegative_float(value: Any) -> float:
 def render_agent_diagnostics(diagnostics) -> str:
     """Render only bounded, non-sensitive Agent runtime fields."""
     skill_id = _value(diagnostics, "skill_id", "unknown")
-    if skill_id not in {"evidence_qa", "research_plan", "literature_compare", "general_chat"}:
+    if skill_id not in {"evidence_qa", "research_plan", "general_chat"}:
         skill_id = "unknown"
     route_mode = _value(diagnostics, "route_mode", "fallback")
     if route_mode not in {"model", "fallback"}:
@@ -114,29 +104,6 @@ def render_agent_diagnostics(diagnostics) -> str:
             f"- 耗时：{_safe_nonnegative_float(_value(diagnostics, 'total_ms', 0.0)):.3f} ms",
         ]
     )
-
-
-def comparison_dataframe(report) -> list[dict[str, str]]:
-    return [
-        {column: escape_untrusted(_value(row, column, "未报告")) for column in COMPARISON_COLUMNS}
-        for row in _value(report, "rows", [])
-    ]
-
-
-def trend_sections(report) -> dict[str, dict[str, Any]]:
-    sections = {
-        kind: {"label": _LABELS[kind], "claims": []}
-        for kind in ("direct", "synthesis", "suggestion")
-    }
-    for claim in _value(report, "claims", []):
-        kind = _value(claim, "kind")
-        if kind not in sections:
-            continue
-        text = escape_untrusted(_value(claim, "text", ""))
-        if kind == "suggestion" and not text.startswith("可验证假设："):
-            text = f"可验证假设：{text}"
-        sections[kind]["claims"].append(text)
-    return sections
 
 
 def _count(value: Any) -> int | None:

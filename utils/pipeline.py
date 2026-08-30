@@ -16,7 +16,6 @@ from utils.content_loader import load_pdf_text, load_url_text
 from utils.logger import logger
 from utils.search import search_papers
 from utils.text_splitter import split_text
-from utils.push import push_message
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
@@ -25,13 +24,6 @@ REPORTS_DIR = DATA_DIR / "reports"
 SOURCES_PATH = DATA_DIR / "sources.json"
 PAPER_SOURCES_PATH = DATA_DIR / "paper_sources.json"
 PAPER_CACHE_DIR = DATA_DIR / "paper_cache"
-
-
-def _normalize_topics(topics: list[str] | None) -> list[str]:
-    if topics:
-        return topics
-    cfg = load_agent_config()
-    return cfg.get("topics", [])
 
 
 def _normalize_paper_queries(queries: list[str] | None) -> list[str]:
@@ -350,36 +342,3 @@ def sync_papers() -> dict[str, int | str]:
     if set(counts) != {"collected", "ingested"}:
         return {"status": "sync_failed", "collected": 0, "ingested": 0}
     return {"status": "ok", **counts}
-
-
-def generate_brief(topics: list[str] | None = None) -> str:
-    from rag.rag_service import RagSummarizeService
-
-    topics = _normalize_topics(topics)
-    if not topics:
-        return "no topics configured"
-    query = "Daily intelligence brief for: " + ", ".join(topics)
-    rag = RagSummarizeService()
-    return rag.rag_report(query)
-
-
-def _save_report(text: str) -> Path:
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.utcnow().strftime("%Y-%m-%d")
-    path = REPORTS_DIR / f"brief-{stamp}.md"
-    path.write_text(text, encoding="utf-8")
-    return path
-
-
-def run_daily_brief(topics: list[str] | None = None, push: bool = False) -> str:
-    cfg = load_agent_config().get("ingestion", {})
-    if cfg.get("papers", True):
-        collect_papers_and_ingest()
-    brief = generate_brief(topics)
-    _save_report(brief)
-
-    cfg = load_agent_config()
-    if push or cfg.get("push", {}).get("enabled", False):
-        push_message(brief, cfg.get("push", {}).get("channel", "feishu"))
-
-    return brief

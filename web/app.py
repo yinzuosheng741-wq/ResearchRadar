@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 from contextlib import contextmanager, nullcontext
-from datetime import date, datetime
 import importlib.util
 import socket
 import sys
 from pathlib import Path
 from typing import Any, Protocol
-from zoneinfo import ZoneInfo
 
 from web.presenters import (
-    comparison_dataframe,
     distribution_series,
     escape_untrusted,
     knowledge_metrics,
@@ -21,7 +18,6 @@ from web.presenters import (
     render_agent_diagnostics,
     profile_coverage_summary,
     status_summary,
-    trend_sections,
 )
 from utils.logger import logger
 
@@ -100,8 +96,6 @@ class UiServices(Protocol):
     def cited_qa(self, question: str): ...
     def research_chat(self, message: str, conversation=None): ...
     def supplement_search(self, query: str): ...
-    def compare(self, paper_ids: list[str]): ...
-    def trend(self, since: datetime): ...
     def profile(self, *, retry_failed: bool = False): ...
     def rebuild_index(self): ...
     def provider_health(self): ...
@@ -393,11 +387,6 @@ def render_import_sync_page(st, services: UiServices) -> None:
     st.caption("本地 PDF 上传沿用同一摄入流水线，运行时文件保存在 data/papers。")
 
 
-def render_research_trend_page(st, services: UiServices) -> None:
-    """Expose incremental, evidence-backed trends as a first-class workflow."""
-    render_trend_page(st, services)
-
-
 def render_research_plan_page(st, services: UiServices) -> None:
     from domain.models import ResearchConversationState
 
@@ -429,15 +418,6 @@ def render_research_plan_page(st, services: UiServices) -> None:
         st.warning("当前证据不足，建议先补充相关开放论文。")
         if turn.reply.suggested_search_query:
             st.caption(f"建议检索：{escape_untrusted(turn.reply.suggested_search_query)}")
-
-
-def render_research_tools_page(st, services: UiServices) -> None:
-    st.title("研究工具")
-    tool = st.selectbox("选择工具", ["论文对比", "趋势报告"], key="research_tool")
-    if tool == "论文对比":
-        render_comparison_page(st, services)
-    else:
-        render_trend_page(st, services)
 
 
 def render_knowledge_maintenance_page(st, services: UiServices) -> None:
@@ -664,7 +644,6 @@ def render_research_agent_page(st, services: UiServices) -> None:
     tool_labels = {
         "evidence_qa": "证据问答",
         "research_plan": "研究路线",
-        "literature_compare": "论文对比",
         "general_chat": "普通对话（未调用本地知识库）",
     }
     for message in conversation.messages:
@@ -677,11 +656,6 @@ def render_research_agent_page(st, services: UiServices) -> None:
                     st.markdown(render_agent_diagnostics(message.diagnostics))
             for citation in message.citations:
                 st.markdown(render_citation(citation))
-            if message.comparison_report is not None:
-                st.dataframe(
-                    comparison_dataframe(message.comparison_report),
-                    width="stretch",
-                )
 
     pending_query = st.session_state.get(_RESEARCH_AGENT_SEARCH_KEY)
     if isinstance(pending_query, str) and pending_query:
@@ -718,124 +692,6 @@ def render_research_agent_page(st, services: UiServices) -> None:
     else:
         st.session_state.pop(_RESEARCH_AGENT_SEARCH_KEY, None)
     st.rerun()
-
-
-def _paper_options(snapshot: dict[str, Any]) -> tuple[list[str], dict[str, str]]:
-    ids, labels = [], {}
-    profiled_ids = set(snapshot.get("profiled_paper_ids", []))
-    for paper in snapshot.get("indexed_papers", []):
-        if not isinstance(paper, dict) or not isinstance(paper.get("paper_id"), str):
-            continue
-        paper_id = paper["paper_id"]
-        if profiled_ids and paper_id not in profiled_ids:
-            continue
-        ids.append(paper_id)
-        labels[paper_id] = escape_untrusted(paper.get("title", paper_id))
-    return ids, labels
-
-
-def render_comparison_page(st, services: UiServices) -> None:
-    st.title("论文对比")
-    options, labels = _paper_options(_snapshot(services))
-    if len(options) < 2:
-        st.info("至少需要 2 篇已索引且已生成结构化档案的论文；请先同步论文。")
-    selected = st.multiselect(
-        "选择 2–5 篇论文", options,
-        format_func=lambda paper_id: labels.get(paper_id, paper_id),
-        max_selections=5,
-    )
-    if not st.button("生成对比"):
-        return
-    if not 2 <= len(selected) <= 5:
-        st.warning("请选择 2–5 篇论文。")
-        return
-    try:
-        with _running_status(st, "正在比较论文并整理证据...", "论文对比已生成"):
-            report = services.compare(selected)
-    except ValueError as exc:
-        if str(exc) == "comparison_profile_not_found":
-            st.info("所选论文的结构化档案不足，请先完成解析或改选论文。")
-        else:
-            _safe_error(st, "ui_comparison_failed")
-        return
-    except Exception:
-        _safe_error(st, "ui_comparison_failed")
-        return
-    if report is None:
-        st.info("所选论文的结构化档案不足，请先完成解析。")
-        return
-    st.dataframe(comparison_dataframe(report), width="stretch")
-    st.subheader("综合结论")
-    st.markdown(escape_untrusted(getattr(report, "synthesis_markdown", "")))
-    titles = {getattr(row, "paper_id", None): getattr(row, "title", "未命名论文") for row in getattr(report, "rows", [])}
-    for citation in getattr(report, "citations", []):
-        view = {
-            "title": titles.get(getattr(citation, "paper_id", None), "未命名论文"),
-            "page_number": getattr(citation, "page_number", 0),
-            "quote": getattr(citation, "quote", ""),
-        }
-        st.markdown(render_citation(view))
-
-
-def shanghai_start_of_day(value: date) -> datetime:
-    return datetime(value.year, value.month, value.day, tzinfo=ZoneInfo("Asia/Shanghai"))
-
-
-def render_trend_page(st, services: UiServices) -> None:
-    st.title("趋势报告")
-    st.info("选择日期，生成该日期以来新增论文的证据化趋势报告。")
-    chosen = st.date_input("选择日期")
-    if not st.button("生成趋势报告"):
-        return
-    try:
-        with _running_status(st, "正在分析趋势并整理证据...", "趋势报告已生成"):
-            snapshot = _snapshot(services)
-            audit = services.knowledge_audit() if hasattr(services, "knowledge_audit") else {}
-            coverage = profile_coverage_summary(audit if isinstance(audit, dict) else {})
-            if coverage:
-                st.caption(
-                    "本报告仅基于已画像论文："
-                    f"{coverage['profiled_papers']}/{coverage['metadata_total']} 篇，"
-                    f"全文画像覆盖 {coverage['fulltext_profiled_papers']}/"
-                    f"{coverage['fulltext_evidence_papers']} 篇。"
-                )
-            if status_summary(snapshot.get("stats", {})).get("metadata_total", 0) == 0:
-                st.info("知识库无新增论文；请先同步新增论文或调整日期。")
-                return
-            report = services.trend(shanghai_start_of_day(chosen))
-    except Exception:
-        _safe_error(st, "ui_trend_failed")
-        return
-    if report is None or not getattr(report, "new_papers", []):
-        st.info("该时间范围尚无新增论文；可先同步新增论文或调整日期。")
-        return
-    paper_titles = {
-        str(paper.get("paper_id")): str(paper.get("title") or "未命名论文")
-        for paper in snapshot.get("papers", [])
-        if isinstance(paper, dict) and paper.get("paper_id")
-    }
-    claims_by_kind: dict[str, list[Any]] = {}
-    for claim in getattr(report, "claims", []):
-        kind = getattr(claim, "kind", "")
-        claims_by_kind.setdefault(kind, []).append(claim)
-    for kind, section in trend_sections(report).items():
-        st.subheader(section["label"])
-        if not section["claims"]:
-            st.info("本类别暂无经验证的结论。")
-        for claim, text in zip(claims_by_kind.get(kind, []), section["claims"], strict=True):
-            st.markdown(f"- {text}")
-            for citation in getattr(claim, "evidence", []):
-                st.markdown(
-                    render_citation(
-                        {
-                            "title": paper_titles.get(
-                                getattr(citation, "paper_id", ""), "未命名论文"
-                            ),
-                            "page_number": getattr(citation, "page_number", 0),
-                            "quote": getattr(citation, "quote", ""),
-                        }
-                    )
-                )
 
 
 class DefaultUiServices:
@@ -895,8 +751,6 @@ class DefaultUiServices:
     def cited_qa(self, question: str): return self._cli_services().cited_qa(question)
     def research_chat(self, message: str, conversation=None): return self._cli_services().research_chat(message, conversation)
     def supplement_search(self, query: str): return self._cli_services().collect_papers(type("Args", (), {"queries": query, "provider": "openalex", "max_results": 20, "include_pdf": True})())
-    def compare(self, paper_ids: list[str]): return self._cli_services().compare(paper_ids)
-    def trend(self, since: datetime): return self._cli_services().trend(since)
     def profile(self, *, retry_failed: bool = False): return self._cli_services().profile(retry_failed=retry_failed)
     def rebuild_index(self): return self._cli_services().rebuild_index()
     def provider_health(self): return self._cli_services().provider_health()

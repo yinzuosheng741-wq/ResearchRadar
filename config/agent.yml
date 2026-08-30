@@ -1,11 +1,7 @@
-topics:
-  - LLM latest papers
-  - Agent framework release notes
-  - RAG evaluation benchmarks
 paper_queries:
-  - agentic workflow
-  - retrieval augmented generation
-  - tool calling evaluation
+  - water color remote sensing prediction
+  - chlorophyll-a remote sensing machine learning
+  - inland water quality satellite estimation
 papers:
   providers:
     - openalex
@@ -14,14 +10,3 @@ papers:
   min_year: 2023
 ingestion:
   papers: true
-schedule:
-  enabled: true
-  time: "08:00"
-  timezone: "Asia/Shanghai"
-  day_of_week: mon
-  historical_limit: 50
-push:
-  enabled: false
-  channel: feishu
-report:
-  top_k: 6

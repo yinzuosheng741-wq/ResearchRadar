@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from domain.models import CitedAnswer, ComparisonReport, ResearchPlan
+from domain.models import CitedAnswer, ResearchPlan
 
 
 class EvidenceQaInput(BaseModel):
@@ -18,11 +18,6 @@ class EvidenceQaInput(BaseModel):
 class ResearchPlanInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     query: str = Field(min_length=1, max_length=4000)
-
-
-class LiteratureCompareInput(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    paper_ids: list[str] = Field(min_length=2, max_length=5)
 
 
 @dataclass(frozen=True)
@@ -126,13 +121,6 @@ DEFAULT_SKILL_REGISTRY = SkillRegistry(
             output_model=ResearchPlan,
             fallback_text="当前本地知识库不足以生成可靠研究路线。",
         ),
-        SkillSpec(
-            skill_id="literature_compare",
-            description="Compare two to five profiled papers.",
-            input_model=LiteratureCompareInput,
-            output_model=ComparisonReport,
-            fallback_text="所选论文不足以生成可靠对比。",
-        ),
     ]
 )
 
@@ -140,7 +128,6 @@ DEFAULT_SKILL_REGISTRY = SkillRegistry(
 __all__ = [
     "DEFAULT_SKILL_REGISTRY",
     "EvidenceQaInput",
-    "LiteratureCompareInput",
     "ResearchPlanInput",
     "SkillExecution",
     "SkillExecutor",

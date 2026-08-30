@@ -20,14 +20,6 @@ def load_cited_qa_prompt() -> str:
     return _load_prompt("cited_qa.txt")
 
 
-def load_comparison_prompt() -> str:
-    return _load_prompt("comparison.txt")
-
-
-def load_trends_prompt() -> str:
-    return _load_prompt("trends.txt")
-
-
 def load_research_agent_prompt() -> str:
     return _load_prompt("research_agent.txt")
 

@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
 import json
 import os
 from pathlib import Path
 import sys
 from typing import Any, TextIO
-from zoneinfo import ZoneInfo
 
 import yaml
 
@@ -46,10 +44,6 @@ def build_parser() -> argparse.ArgumentParser:
 
     ask = subparsers.add_parser("ask", help="Ask an evidence-grounded question")
     ask.add_argument("question")
-    compare = subparsers.add_parser("compare", help="Compare cached paper profiles")
-    compare.add_argument("--paper-ids", nargs="+", required=True)
-    brief = subparsers.add_parser("brief", help="Generate an incremental trend brief")
-    brief.add_argument("--since", required=True)
     subparsers.add_parser("rebuild-index", help="Guardedly rebuild the vector index")
     profile = subparsers.add_parser("profile", help="Extract profiles from local parsed PDFs")
     profile.add_argument("--retry-failed", action="store_true")
@@ -71,7 +65,6 @@ def build_parser() -> argparse.ArgumentParser:
     legacy.add_argument("--provider", choices=["openalex"])
     legacy.add_argument("--max-results", type=int)
     legacy.add_argument("--include-pdf", action="store_true", default=None)
-    subparsers.add_parser("schedule", help="Start the legacy scheduler")
     return parser
 
 
@@ -88,16 +81,6 @@ def _emit(value: Any, stdout: TextIO) -> None:
         stdout.write(value + "\n")
     else:
         stdout.write(json.dumps(_jsonable(value), ensure_ascii=False, sort_keys=True) + "\n")
-
-
-def _since(value: str) -> datetime:
-    try:
-        parsed = datetime.fromisoformat(value)
-    except ValueError:
-        raise ValueError("brief_invalid_since") from None
-    if parsed.tzinfo is None or parsed.utcoffset() is None:
-        parsed = parsed.replace(tzinfo=ZoneInfo("Asia/Shanghai"))
-    return parsed
 
 
 class DefaultServices:
@@ -261,7 +244,6 @@ class DefaultServices:
         from retrieval.keyword_index import KeywordIndex
         from workflows.qa import CitedQaService
         from workflows.research_plan import ResearchPlanService
-        from workflows.comparison import ComparisonService
         from utils.config import load_rag_config
 
         database = self._database()
@@ -285,19 +267,8 @@ class DefaultServices:
             model=model,
             qa_service=qa_service,
             plan_service=plan_service,
-            comparison_service=ComparisonService(database, model),
             memory_store=database,
         ).chat(message, conversation)
-
-    def compare(self, paper_ids):
-        from workflows.comparison import ComparisonService
-
-        return ComparisonService(self._database(), self._model()).compare(paper_ids)
-
-    def trend(self, since):
-        from workflows.trends import TrendService
-
-        return TrendService(self._database(), self._model()).generate(since)
 
     def rebuild_index(self):
         database = self._database()
@@ -404,13 +375,6 @@ class DefaultServices:
             queries, args.provider, args.max_results, args.include_pdf
         )
 
-    @staticmethod
-    def schedule():
-        from utils.scheduler import start_scheduler
-
-        return start_scheduler()
-
-
 def run(argv=None, *, services=None, stdout: TextIO | None = None) -> int:
     stdout = stdout or sys.stdout
     parser = build_parser()
@@ -463,10 +427,6 @@ def run(argv=None, *, services=None, stdout: TextIO | None = None) -> int:
         result = services.knowledge_audit()
     elif args.command == "ask":
         result = services.cited_qa(args.question)
-    elif args.command == "compare":
-        result = services.compare(args.paper_ids)
-    elif args.command == "brief":
-        result = services.trend(_since(args.since))
     elif args.command == "rebuild-index":
         result = {"indexed": services.rebuild_index(), "status": "ok"}
     elif args.command == "profile":
@@ -499,8 +459,6 @@ def run(argv=None, *, services=None, stdout: TextIO | None = None) -> int:
         result = services.provider_health()
     elif args.command == "collect-papers":
         result = services.collect_papers(args)
-    elif args.command == "schedule":
-        result = services.schedule()
     else:
         raise ValueError("unknown_command")
     _emit(result, stdout)

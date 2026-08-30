@@ -120,54 +120,6 @@ class RetryFullTextReport(BaseModel):
     failures: dict[str, int] = Field(default_factory=dict)
 
 
-class ProfileCitation(BaseModel):
-    paper_id: str
-    page_number: int
-    quote: str
-
-
-class ComparisonRow(BaseModel):
-    paper_id: str
-    title: str
-    prediction_target: str
-    sensors: str
-    study_area: str
-    time_span: str
-    sample_size: str
-    preprocessing: str
-    models: str
-    baselines: str
-    datasets: str
-    metrics: str
-    limitations: str
-
-
-class ComparisonReport(BaseModel):
-    rows: list[ComparisonRow]
-    synthesis_markdown: str
-    citations: list[ProfileCitation] = Field(default_factory=list)
-
-
-class TrendClaim(BaseModel):
-    kind: Literal["direct", "synthesis", "suggestion"]
-    text: str
-    paper_ids: list[str] = Field(default_factory=list)
-    evidence: list[ProfileCitation] = Field(default_factory=list)
-
-
-class TrendReport(BaseModel):
-    generated_at: datetime
-    new_papers: list[PaperRecord]
-    claims: list[TrendClaim] = Field(default_factory=list)
-
-
-class WeeklyWorkflowResult(BaseModel):
-    status: Literal["saved", "delivered", "sync_failed", "trend_failed", "save_failed", "delivery_failed"]
-    saved_path: str | None = None
-    retryable: bool = False
-    error: str | None = None
-
-
 class ResearchScope(BaseModel):
     topic: str = ""
     prediction_target: str = ""
@@ -220,7 +172,7 @@ class AgentDiagnostics(BaseModel):
         "fallback_rule_domain_question",
         "fallback_rule_general_chat",
     ]
-    skill_id: Literal["evidence_qa", "research_plan", "literature_compare", "general_chat"]
+    skill_id: Literal["evidence_qa", "research_plan", "general_chat"]
     skill_version: str = "not_applicable"
     evidence_sufficient: bool = False
     retrieval_candidates: int = Field(default=0, ge=0)
@@ -237,7 +189,6 @@ class ResearchConversationMessage(BaseModel):
     content: str
     tool_name: str | None = None
     citations: list[AnswerCitation] = Field(default_factory=list)
-    comparison_report: ComparisonReport | None = None
     diagnostics: AgentDiagnostics | None = None
 
 
@@ -249,9 +200,8 @@ class ResearchConversationState(BaseModel):
 
 class ResearchAgentReply(BaseModel):
     content: str
-    tool_name: Literal["evidence_qa", "research_plan", "literature_compare", "general_chat"]
+    tool_name: Literal["evidence_qa", "research_plan", "general_chat"]
     citations: list[AnswerCitation] = Field(default_factory=list)
-    comparison_report: ComparisonReport | None = None
     evidence_sufficient: bool
     suggested_search_query: str | None = None
     diagnostics: AgentDiagnostics | None = None

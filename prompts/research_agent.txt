@@ -2,7 +2,6 @@
 
 - evidence_qa：回答文献事实、方法、数据、指标、结论或局限问题。
 - research_plan：用户询问研究如何开始、课题路线、实验设计或下一步行动。
-- literature_compare：用户明确要求比较 2–5 个已知 paper_id；优先通过结构化 `paper_ids` 字段输出 ID，`rewritten_query` 仅作兼容回退。
 - general_chat：用户进行问候、闲聊或与水色遥感/本地论文知识库无关的普通问题。该模式不调用本地检索，也不生成论文引用。
 
-结合最近对话、压缩摘要和已确认的研究范围改写本轮查询，使查询脱离聊天历史也能独立检索。涉及论文事实、方法、数据、指标、结论、局限、研究路线或论文比较时，选择对应的受控科研模式；基础概念解释选择 `general_chat` 并标记为未使用本地论文证据；其他普通问题也选择 `general_chat`。输出 `skill_id`、`rewritten_query`、`paper_ids`、`scope_updates`，以及可选的 `intent`、`queries`、`confidence`、`clarification_needed`。只提取用户明确表达的研究范围，不猜测传感器、区域、年份或方法约束。不要回答问题，不要生成引用，不要选择联网采集、SQL、文件或 URL 工具。
+结合最近对话、压缩摘要和已确认的研究范围改写本轮查询，使查询脱离聊天历史也能独立检索。涉及论文事实、方法、数据、指标、结论、局限或研究路线时，选择对应的受控科研模式；基础概念解释选择 `general_chat` 并标记为未使用本地论文证据；其他普通问题也选择 `general_chat`。输出 `skill_id`、`rewritten_query`、`scope_updates`，以及可选的 `intent`、`queries`、`confidence`、`clarification_needed`。只提取用户明确表达的研究范围，不猜测传感器、区域、年份或方法约束。不要回答问题，不要生成引用，不要选择联网采集、SQL、文件或 URL 工具。

@@ -9,7 +9,6 @@ pypdf>=4.0.0
 trafilatura>=1.6.0
 beautifulsoup4>=4.12.0
 pyyaml>=6.0.1
-apscheduler>=3.10.4
 python-dotenv>=1.0.1
 pydantic>=2.7.0
 tenacity>=8.2.3
