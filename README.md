@@ -65,6 +65,20 @@ streamlit run web/app.py
 
 `data/evaluation/questions.jsonl` 是带占位符的注释模板，不能直接当作评测结果；`questions-annotated.jsonl` 是当前随仓库提供的本地证据组样例。重新摄入论文后，应重新核对真实的 `paper_id` 和 `chunk_id`。
 
+## 验证与 CI
+
+仓库通过 GitHub Actions 在 `main` 推送和 Pull Request 时使用 Python 3.12 执行依赖安装、离线 healthcheck、静态编译和自动化测试。CI 不调用模型或真实 provider，因此它验证的是可重复的本地逻辑与数据契约，不替代外部数据源联调。
+
+本地提交前可执行：
+
+```powershell
+python scripts/healthcheck.py
+python -m compileall -q agent domain evaluation ingestion model providers rag retrieval storage web workflows
+python -m pytest -q
+```
+
+真实演示前还应运行 `python app.py provider-health`，并在实际论文语料上确认引用回查与证据不足 fallback。不要将固定语料的离线指标或一次测试结果表述为线上模型准确率。
+
 ## 工作台页面
 
 侧边栏包含七个入口：
