@@ -15,6 +15,7 @@ from agent.evidence_review import EvidenceAssessment, needs_evidence_review, rev
 from retrieval.coordinator import retrieve_evidence, SearchAudit, merge_audits
 from retrieval.query_expansion import plan_query
 from retrieval.context import ContextAudit, assemble_context
+from retrieval.evidence_requirements import evidence_requirement_gap
 from utils.prompt_loader import load_cited_qa_prompt
 
 
@@ -212,6 +213,21 @@ class CitedQaService:
                 answerability="insufficient_evidence",
             )
             return self._insufficient(question, level="none", reason="no canonical evidence chunks are available")
+
+        gap = evidence_requirement_gap(question, chunks)
+        if gap:
+            self.last_trace = QATrace(
+                status=gap, retrieval_ms=round(retrieval_ms, 3),
+                retrieved_chunks=len(retrieved), canonical_chunks=len(chunks),
+                original_query=question, query_variants=list(plan.queries),
+                intent_confidence=plan.confidence, retrieval_confidence=retrieval_confidence,
+                evidence_confidence=_evidence_confidence(chunks), answerability="insufficient_evidence",
+            )
+            return CitedAnswer(
+                answer_markdown="当前仅检索到摘要证据，无法据此核验你要求的正文、表格或实验细节。请补充全文或对应补充材料后再核对。",
+                citations=[], evidence_sufficient=False, evidence_level="related",
+                evidence_reason=gap, suggested_search_query=f"{question} full text supplementary material",
+            )
 
         request = [
             SystemMessage(content=load_cited_qa_prompt()),
