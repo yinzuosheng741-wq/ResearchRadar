@@ -182,6 +182,10 @@ class AgentDiagnostics(BaseModel):
     retrieval_ms: float = Field(default=0.0, ge=0.0)
     model_ms: float = Field(default=0.0, ge=0.0)
     total_ms: float = Field(default=0.0, ge=0.0)
+    model_calls: int = Field(default=0, ge=0)
+    tool_calls: int = Field(default=0, ge=0)
+    search_calls: int = Field(default=0, ge=0)
+    policy_events: list[dict[str, str | int]] = Field(default_factory=list)
 
 
 class ResearchConversationMessage(BaseModel):

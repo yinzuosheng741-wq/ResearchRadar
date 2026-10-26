@@ -128,7 +128,14 @@ def _snapshot(services: UiServices) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
-def render_sidebar(st) -> str:
+def render_sidebar(st, *, compact: bool = False) -> str:
+    if compact:
+        target = st.session_state.pop("research_navigation_target", None)
+        if target:
+            st.session_state["research_workbench_module"] = target
+        st.sidebar.markdown("### ResearchRadar")
+        labels = [label for _group, label in WORKBENCH_NAV_ITEMS]
+        return st.sidebar.selectbox("工作区", labels, key="research_workbench_module")
     grouped: dict[str, list[str]] = {}
     for group, label in WORKBENCH_NAV_ITEMS:
         grouped.setdefault(group, []).append(label)
@@ -221,7 +228,7 @@ def render_sidebar(st) -> str:
                 clicked = st.sidebar.button(
                     display,
                     key=f"research_nav_{label}",
-                    width="stretch",
+                    use_container_width=True,
                 )
                 if clicked:
                     active = label
@@ -286,7 +293,7 @@ def render_knowledge_overview_page(st, services: UiServices) -> None:
                 st.dataframe(
                     [{"期刊 / 会议": label, "论文数": count} for label, count in sorted(venues.items(), key=lambda item: (-item[1], str(item[0])))[:8]],
                     hide_index=True,
-                    width="stretch",
+                    use_container_width=True,
                 )
             else:
                 st.info("暂无期刊数据")
@@ -312,7 +319,7 @@ def render_knowledge_overview_page(st, services: UiServices) -> None:
         if isinstance(paper, dict)
     ]
     if recent:
-        st.dataframe(recent, hide_index=True, width="stretch")
+        st.dataframe(recent, hide_index=True, use_container_width=True)
     else:
         st.info("暂无入库论文")
     sources = summary.get("providers", {})
@@ -360,7 +367,7 @@ def render_literature_library_page(st, services: UiServices) -> None:
         filtered.append(paper)
     st.caption(f"匹配 {len(filtered)} 篇论文")
     if filtered:
-        st.dataframe(paper_table_rows(filtered), width="stretch")
+        st.dataframe(paper_table_rows(filtered), use_container_width=True)
     else:
         st.info("暂无符合条件的论文。请调整筛选条件或先前往知识库维护同步文献。")
 
@@ -511,7 +518,7 @@ def render_knowledge_maintenance_page(st, services: UiServices) -> None:
             for code, item in sorted(grouped.items())
         ]
         if rows:
-            st.dataframe(rows, width="stretch")
+            st.dataframe(rows, use_container_width=True)
         else:
             st.info("暂无可展示的失败记录。")
 
@@ -537,7 +544,7 @@ def render_task_log_page(st, services: UiServices) -> None:
         if isinstance(item, dict)
     ]
     if rows:
-        st.dataframe(rows, width="stretch")
+        st.dataframe(rows, use_container_width=True)
     else:
         st.info("暂无任务记录。")
 
@@ -556,7 +563,7 @@ def render_data_source_page(st, services: UiServices) -> None:
     if not health:
         st.info("尚未执行数据源健康检查。点击上方按钮开始检查。")
         return
-    st.dataframe(health, width="stretch")
+    st.dataframe(health, use_container_width=True)
 
 
 def render_qa_page(st, services: UiServices) -> None:
@@ -614,11 +621,14 @@ def render_qa_page(st, services: UiServices) -> None:
 def render_research_agent_page(st, services: UiServices) -> None:
     from domain.models import ResearchConversationState
 
-    st.title("科研 Agent")
+    st.title("ResearchRadar")
     st.caption("基于本地论文知识库的证据化研究助手")
     controls = st.columns([1, 4])
     with controls[0]:
         if st.button("清空对话", key="clear_research_agent"):
+            if "research_chat_store" in st.session_state:
+                st.session_state["research_chat_store"].delete(st.session_state["research_chat_id"])
+                st.session_state.pop("research_chat_transcript", None)
             st.session_state.pop(_RESEARCH_AGENT_STATE_KEY, None)
             st.session_state.pop(_RESEARCH_AGENT_SEARCH_KEY, None)
             st.rerun()
@@ -626,6 +636,9 @@ def render_research_agent_page(st, services: UiServices) -> None:
     conversation = ResearchConversationState.model_validate(
         st.session_state.get(_RESEARCH_AGENT_STATE_KEY) or {}
     )
+    if "research_chat_store" in st.session_state:
+        from web.chat_workspace import render_memory
+        render_memory(st, services, conversation)
     if conversation.scope != type(conversation.scope)():
         with st.expander("当前研究范围"):
             scope = {
@@ -646,7 +659,10 @@ def render_research_agent_page(st, services: UiServices) -> None:
         "research_plan": "研究路线",
         "general_chat": "普通对话（未调用本地知识库）",
     }
-    for message in conversation.messages:
+    from domain.models import ResearchConversationMessage
+    transcript = [ResearchConversationMessage.model_validate(m) for m in
+                  st.session_state.get("research_chat_transcript", [])] or conversation.messages
+    for message in transcript:
         with st.chat_message(message.role):
             st.markdown(escape_untrusted(message.content))
             if message.tool_name:
@@ -677,7 +693,12 @@ def render_research_agent_page(st, services: UiServices) -> None:
         st.markdown(escape_untrusted(prompt))
     try:
         with _running_status(st, "正在处理你的问题", "回答已生成"):
-            turn = services.research_chat(prompt, conversation)
+            if st.session_state.get("research_scope_mode") == "仅选定论文":
+                from agent.execution import ExecutionContext
+                turn = services.research_chat(prompt, conversation, execution_context=ExecutionContext(
+                    paper_ids=tuple(st.session_state.get("research_paper_scope", []))))
+            else:
+                turn = services.research_chat(prompt, conversation)
     except ValueError:
         _safe_error(st, "ui_agent_message_invalid")
         return
@@ -687,6 +708,10 @@ def render_research_agent_page(st, services: UiServices) -> None:
         _safe_error(st, code)
         return
     st.session_state[_RESEARCH_AGENT_STATE_KEY] = turn.state.model_dump(mode="json")
+    if "research_chat_store" in st.session_state:
+        transcript = [*transcript, *turn.state.messages[-2:]]
+        st.session_state["research_chat_store"].save(st.session_state["research_chat_id"], turn.state, transcript)
+        st.session_state["research_chat_transcript"] = [m.model_dump(mode="json") for m in transcript]
     if not turn.reply.evidence_sufficient and turn.reply.suggested_search_query:
         st.session_state[_RESEARCH_AGENT_SEARCH_KEY] = turn.reply.suggested_search_query
     else:
@@ -749,7 +774,18 @@ class DefaultUiServices:
 
     def sync(self): return self._cli_services().sync()
     def cited_qa(self, question: str): return self._cli_services().cited_qa(question)
-    def research_chat(self, message: str, conversation=None): return self._cli_services().research_chat(message, conversation)
+    def research_chat(self, message: str, conversation=None, *, execution_context=None):
+        return self._cli_services().research_chat(message, conversation, execution_context=execution_context)
+    def project_memory(self):
+        return self._cli_services()._database().get_project_memory()
+    def confirm_scope(self, scope):
+        from agent.research_agent import ResearchAgentService
+        ResearchAgentService(model=None, qa_service=None, plan_service=None,
+                             memory_store=self._cli_services()._database()).confirm_scope(scope)
+    def clear_project_memory(self):
+        from domain.models import ResearchProjectMemory
+        database = self._cli_services()._database()
+        database.save_project_memory(ResearchProjectMemory(project_id=database.get_project_memory().project_id))
     def supplement_search(self, query: str): return self._cli_services().collect_papers(type("Args", (), {"queries": query, "provider": "openalex", "max_results": 20, "include_pdf": True})())
     def profile(self, *, retry_failed: bool = False): return self._cli_services().profile(retry_failed=retry_failed)
     def rebuild_index(self): return self._cli_services().rebuild_index()
@@ -786,7 +822,11 @@ def run_app(st=None, services: UiServices | None = None) -> None:
         "任务与日志": render_task_log_page,
         "数据源设置": render_data_source_page,
     }
-    selected = render_sidebar(st)
+    selected = render_sidebar(st, compact=isinstance(services, DefaultUiServices))
+    if isinstance(services, DefaultUiServices):
+        from web.chat_workspace import render_workspace, inject_chat_style
+        render_workspace(st)
+        inject_chat_style(st)
     pages[selected](st, services)
 
 

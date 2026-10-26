@@ -92,6 +92,7 @@ def render_agent_diagnostics(diagnostics) -> str:
     return "\n".join(
         [
             "**运行诊断**",
+            f"- 调用计数：模型 {_safe_nonnegative_int(_value(diagnostics, 'model_calls', 0))} / 工具 {_safe_nonnegative_int(_value(diagnostics, 'tool_calls', 0))} / 检索 {_safe_nonnegative_int(_value(diagnostics, 'search_calls', 0))}",
             f"- Skill：{escape_untrusted(skill_id)}",
             f"- Skill 版本：{escape_untrusted(skill_version)}",
             f"- 路由：{escape_untrusted(route_mode)}",

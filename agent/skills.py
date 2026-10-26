@@ -4,20 +4,24 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from inspect import signature
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from domain.models import CitedAnswer, ResearchPlan
+from agent.execution import ExecutionDenied, consume, current_context, skill_model_budget
 
 
 class EvidenceQaInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     query: str = Field(min_length=1, max_length=4000)
+    supplemental_queries: list[str] = Field(default_factory=list, max_length=4)
 
 
 class ResearchPlanInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     query: str = Field(min_length=1, max_length=4000)
+    supplemental_queries: list[str] = Field(default_factory=list, max_length=4)
 
 
 @dataclass(frozen=True)
@@ -80,13 +84,33 @@ class SkillExecutor:
     def execute(self, skill_id: str, payload: object) -> SkillExecution:
         spec = self.registry.get(skill_id)
         try:
+            context = current_context()
+            if context is not None:
+                if skill_id not in context.allowed_skills or spec.allowed_data_scope != context.data_scope:
+                    context.record("blocked", "skill_scope_denied")
+                    raise ExecutionDenied("skill_scope_denied")
+            consume("tool_calls")
             request = self.registry.validate(skill_id, payload)
             handler = self.handlers.get(skill_id)
             if handler is None:
                 return self._failure(spec)
             values = request.model_dump()
             argument = values.get("query", values.get("paper_ids"))
-            output = spec.output_model.model_validate(handler(argument))
+            parameters = signature(handler).parameters
+            kwargs = {}
+            if context is not None and context.paper_ids is not None:
+                if "paper_ids" not in parameters:
+                    raise ExecutionDenied("handler_scope_unsupported")
+                kwargs["paper_ids"] = list(context.paper_ids)
+            if values.get("supplemental_queries") and "supplemental_queries" in parameters:
+                kwargs["supplemental_queries"] = values["supplemental_queries"]
+            with skill_model_budget(spec.max_model_calls):
+                output = spec.output_model.model_validate(handler(argument, **kwargs))
+            if context is not None:
+                context.record("finished", skill_id)
+        except ExecutionDenied as exc:
+            return SkillExecution(skill_id=skill_id, output=None, message=spec.fallback_text,
+                                  error_code=str(exc))
         except Exception:
             return self._failure(spec)
         return SkillExecution(
@@ -109,6 +133,7 @@ DEFAULT_SKILL_REGISTRY = SkillRegistry(
     [
         SkillSpec(
             skill_id="evidence_qa",
+            max_model_calls=2,
             description="Answer a research question from validated local evidence.",
             input_model=EvidenceQaInput,
             output_model=CitedAnswer,

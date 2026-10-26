@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "selection_basis": "Purposive pilot spanning in-situ datasets, chlorophyll, TSS, atmospheric correction, bloom forecasting and reviews. Not a representative random sample or approved evidence set.",
+  "paper_ids": [
+    "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f",
+    "1e932f09-6aea-41ff-aa04-219a63e53258",
+    "0fcf7cc2-b620-4151-a698-e381f3df8a4e",
+    "4e91713a-e18a-4142-900c-c05e30a8aadb",
+    "4e3b45e6-1dc9-4e0a-9cb8-592acc92c7af",
+    "602d4eea-eef5-413b-a7ca-c8633ad569a6",
+    "9fbf956d-252c-4a18-9174-b993754baf84",
+    "227c8814-d657-4680-80b9-90b393010161",
+    "c1a29ba0-6042-42f4-8fc3-413d90f12e46",
+    "92fa9e37-bd9f-4556-b937-afbd6368988f",
+    "2ded4ee2-2a6e-44d4-ad3e-5124f2ef3d13",
+    "3cbdb57f-8a23-4a1a-a66c-8c91b4687e19",
+    "182fc597-6499-4441-b50e-8bb0c997a740",
+    "1bd30ec8-2b12-4ccf-bef0-b95f0dc5e779",
+    "016a3b10-44cc-4b63-8073-6366b654685f",
+    "14e1c658-1f80-469f-a472-7163ac5490d2",
+    "2b683b5e-3165-4d7a-8504-ec453bc268c8",
+    "02e872bf-59d1-4459-a797-055daf60e213",
+    "3476993b-857a-40a1-ad74-4de28acf131b",
+    "395974be-d0b2-40bd-89f0-9a4def720e74"
+  ]
+}

@@ -1,0 +1,4126 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-10-22T14:03:23.029078+00:00",
+  "network_calls": 0,
+  "model_calls": 0,
+  "selection": {
+    "version": 1,
+    "selection_basis": "Purposive pilot spanning in-situ datasets, chlorophyll, TSS, atmospheric correction, bloom forecasting and reviews. Not a representative random sample or approved evidence set.",
+    "paper_ids": [
+      "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f",
+      "1e932f09-6aea-41ff-aa04-219a63e53258",
+      "0fcf7cc2-b620-4151-a698-e381f3df8a4e",
+      "4e91713a-e18a-4142-900c-c05e30a8aadb",
+      "4e3b45e6-1dc9-4e0a-9cb8-592acc92c7af",
+      "602d4eea-eef5-413b-a7ca-c8633ad569a6",
+      "9fbf956d-252c-4a18-9174-b993754baf84",
+      "227c8814-d657-4680-80b9-90b393010161",
+      "c1a29ba0-6042-42f4-8fc3-413d90f12e46",
+      "92fa9e37-bd9f-4556-b937-afbd6368988f",
+      "2ded4ee2-2a6e-44d4-ad3e-5124f2ef3d13",
+      "3cbdb57f-8a23-4a1a-a66c-8c91b4687e19",
+      "182fc597-6499-4441-b50e-8bb0c997a740",
+      "1bd30ec8-2b12-4ccf-bef0-b95f0dc5e779",
+      "016a3b10-44cc-4b63-8073-6366b654685f",
+      "14e1c658-1f80-469f-a472-7163ac5490d2",
+      "2b683b5e-3165-4d7a-8504-ec453bc268c8",
+      "02e872bf-59d1-4459-a797-055daf60e213",
+      "3476993b-857a-40a1-ad74-4de28acf131b",
+      "395974be-d0b2-40bd-89f0-9a4def720e74"
+    ]
+  },
+  "index_audit": {
+    "status": "pass",
+    "scope": "identity_payload_and_count_only_not_vector_quality",
+    "canonical_count": 17992,
+    "faiss_count": 17992,
+    "faiss_dimension": 1024,
+    "mapping_count": 17992,
+    "manifest": {
+      "schema_version": 1,
+      "embedding_text_schema": "title-location-text-v1",
+      "embedding": {
+        "provider": "huggingface",
+        "model": "BAAI/bge-m3"
+      },
+      "chunking": {
+        "chunk_size": 800,
+        "chunk_overlap": 120
+      },
+      "chunking_fingerprint": "7306a41a878fd3d1ab38a523591137f1fff7ace26fe47e9b81e64ac19ff37c73",
+      "document_count": 17992,
+      "updated_at": "2026-08-27T04:11:48.472228+00:00"
+    },
+    "positions_contiguous": true,
+    "missing_chunk_ids": [],
+    "stale_chunk_ids": [],
+    "duplicate_chunk_ids": [],
+    "missing_documents": [],
+    "docstore_id_mismatches": [],
+    "payload_mismatches": [],
+    "orphan_docstore_ids": [],
+    "file_sha256": {
+      "index.faiss": "4ca382985bb9ed1ed70f641641515f90ca33a8d407e52695949dcd1cf4064285",
+      "index.pkl": "419faab85abd2ac05d3c3b06a91e616d2aabc01bb6b49ad53bf5740ef402f17a",
+      "vector_store_manifest.json": "086457de42c4a983e7e88e371a6770930de072e582c666bf23dcab59243ad5d8"
+    }
+  },
+  "papers": [
+    {
+      "paper_id": "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f",
+      "title": "LAGOS-US LANDSAT: Remotely sensed water quality estimates for U.S. lakes over 4 ha from 1984 to 2020",
+      "doi": "10.1038/s41597-025-05600-w",
+      "license": "cc-by",
+      "pdf_file": "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f.pdf",
+      "chunk_count": 113,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "fb57f3b4b1cc134710e1885ef0194d8ea82513d55f325f928a902fbe5603e8b8",
+      "pdf_pages": 19,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4099,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4092,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 4634,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 5073,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3425,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3674,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3388,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 6111,
+          "chunk_count": 9,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 3930,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 4095,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 3912,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 4224,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 1288,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 3309,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 2061,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 1230,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 1849,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 7159,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 5543,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 113,
+      "suggested_visual_page": 2,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "1e932f09-6aea-41ff-aa04-219a63e53258",
+      "title": "GLORIA - A globally representative hyperspectral in situ dataset for optical sensing of water quality",
+      "doi": "10.1038/s41597-023-01973-y",
+      "license": "cc-by",
+      "pdf_file": "1e932f09-6aea-41ff-aa04-219a63e53258.pdf",
+      "chunk_count": 118,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "ba5706c34e920e59a8f9d03b36c97eaf119a29d21cc7bec470da9b7172cbc9c0",
+      "pdf_pages": 14,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4023,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 6829,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 3890,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 2376,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4281,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 6875,
+          "chunk_count": 11,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3677,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 6239,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 4583,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 7226,
+          "chunk_count": 11,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 8497,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 7354,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5228,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 4848,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 118,
+      "suggested_visual_page": 8,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "0fcf7cc2-b620-4151-a698-e381f3df8a4e",
+      "title": "A bio-optical database for the remote sensing of water quality in BRAZil coAstal and inland waters (BRAZA)",
+      "doi": "10.1038/s41597-025-05609-1",
+      "license": "cc-by-nc-nd",
+      "pdf_file": "0fcf7cc2-b620-4151-a698-e381f3df8a4e.pdf",
+      "chunk_count": 88,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "6f850374ed84c4c624e7a27e074f5a0a9885be87e97b54cdbc920bdcb4ff8ecf",
+      "pdf_pages": 14,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 3728,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 7611,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 6968,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 1364,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 6138,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 1612,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2449,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2941,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 3884,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 1075,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 2349,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 7702,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 6608,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 1208,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 88,
+      "suggested_visual_page": 2,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "4e91713a-e18a-4142-900c-c05e30a8aadb",
+      "title": "A Chlorophyll-a Algorithm for Landsat-8 Based on Mixture Density Networks",
+      "doi": "10.3389/frsen.2020.623678",
+      "license": "cc-by",
+      "pdf_file": "4e91713a-e18a-4142-900c-c05e30a8aadb.pdf",
+      "chunk_count": 122,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "35244d43a01e48068ea1cba6ca2e6dd7ff712287b35d9f59a938ecebf6d4dadd",
+      "pdf_pages": 17,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4182,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 6738,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 3473,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 2011,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 6083,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 5733,
+          "chunk_count": 9,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2309,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 838,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 4527,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 4113,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 3426,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 3263,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 6752,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 5778,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 9453,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 9297,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 2614,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 122,
+      "suggested_visual_page": 6,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "4e3b45e6-1dc9-4e0a-9cb8-592acc92c7af",
+      "title": "Remote sensing of the chlorophyll-a based on OLI/Landsat-8 and MSI/Sentinel-2A (Barra Bonita reservoir, Brazil)",
+      "doi": "10.1590/0001-3765201720170125",
+      "license": null,
+      "pdf_file": "4e3b45e6-1dc9-4e0a-9cb8-592acc92c7af.pdf",
+      "chunk_count": 64,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "663d5333be98b98d675ba0347d2baf8a8a62e437377babe7338050d2f04c0cad",
+      "pdf_pages": 14,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 3063,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4018,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2210,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 3687,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3301,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3380,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 1461,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 4154,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 297,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 3036,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 2546,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 2474,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5069,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 2773,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 64,
+      "suggested_visual_page": 11,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "602d4eea-eef5-413b-a7ca-c8633ad569a6",
+      "title": "Chlorophyll-a Detection Algorithms at Different Depths Using In Situ, Meteorological, and Remote Sensing Data in a Chilean Lake",
+      "doi": "10.3390/rs16040647",
+      "license": "cc-by",
+      "pdf_file": "602d4eea-eef5-413b-a7ca-c8633ad569a6.pdf",
+      "chunk_count": 121,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "b11061bca059a0c62e0329242d02e0d0477d312fdaee3a1b733e5f695f0b4af1",
+      "pdf_pages": 22,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 1348,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4568,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 4466,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 3754,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4078,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3110,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 1996,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 3032,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 3169,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 4165,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 2994,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 4107,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 2168,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 3437,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 2159,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 2147,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 2079,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 3912,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 4379,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 5717,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 6050,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 5607,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 121,
+      "suggested_visual_page": 10,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "9fbf956d-252c-4a18-9174-b993754baf84",
+      "title": "Water Quality Retrieval from Landsat-9 (OLI-2) Imagery and Comparison to Sentinel-2",
+      "doi": "10.3390/rs14184596",
+      "license": null,
+      "pdf_file": "9fbf956d-252c-4a18-9174-b993754baf84.pdf",
+      "chunk_count": 85,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "21149b53d3b6843b8235287a8ffb49e37eb87c1a4985f35753d5371c010dc4d4",
+      "pdf_pages": 18,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4801,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4929,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2378,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 520,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 2131,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 2902,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2963,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 3792,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 3419,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 327,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 331,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 1129,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 2668,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 1459,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 1808,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 4940,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 6616,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 5704,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 85,
+      "suggested_visual_page": 3,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "227c8814-d657-4680-80b9-90b393010161",
+      "title": "Mapping of total suspended solids using Landsat imagery and machine learning",
+      "doi": "10.1007/s13762-023-04787-y",
+      "license": "cc-by",
+      "pdf_file": "227c8814-d657-4680-80b9-90b393010161.pdf",
+      "chunk_count": 88,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "30b92290bfffc920144652db8f176f8feddc46dc444626401efd66c00f01868a",
+      "pdf_pages": 14,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4057,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 6100,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2456,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 4533,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3936,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 5547,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 5445,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 3213,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 1370,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 3200,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 5515,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 6387,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5883,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 823,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 88,
+      "suggested_visual_page": 7,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "c1a29ba0-6042-42f4-8fc3-413d90f12e46",
+      "title": "Robust algorithm for estimating total suspended solids (TSS) in inland and nearshore coastal waters",
+      "doi": "10.1016/j.rse.2020.111768",
+      "license": null,
+      "pdf_file": "c1a29ba0-6042-42f4-8fc3-413d90f12e46.pdf",
+      "chunk_count": 167,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "601a786533adea0ec42757c3450e5aa7f8bbcdf24b144facf2d4a645850da034",
+      "pdf_pages": 53,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 1236,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 3072,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2011,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 2186,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 2241,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 2279,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2189,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 1938,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 1270,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 2246,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 2192,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 1405,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 2185,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 586,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 765,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 1649,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 2201,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 1524,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 2077,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 1864,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 1584,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 2004,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 2097,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 2079,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 1463,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 26,
+          "extracted_characters": 1738,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 27,
+          "extracted_characters": 1271,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 28,
+          "extracted_characters": 1955,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 29,
+          "extracted_characters": 2228,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 30,
+          "extracted_characters": 1566,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 31,
+          "extracted_characters": 505,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 32,
+          "extracted_characters": 1195,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 33,
+          "extracted_characters": 2054,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 34,
+          "extracted_characters": 1082,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 35,
+          "extracted_characters": 1871,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 36,
+          "extracted_characters": 1815,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 37,
+          "extracted_characters": 1664,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 38,
+          "extracted_characters": 1123,
+          "chunk_count": 2,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 39,
+          "extracted_characters": 1858,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 40,
+          "extracted_characters": 2113,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 41,
+          "extracted_characters": 1847,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 42,
+          "extracted_characters": 297,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 43,
+          "extracted_characters": 451,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 44,
+          "extracted_characters": 1846,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 45,
+          "extracted_characters": 1921,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 46,
+          "extracted_characters": 2738,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 47,
+          "extracted_characters": 3041,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 48,
+          "extracted_characters": 2821,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 49,
+          "extracted_characters": 2825,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 50,
+          "extracted_characters": 2977,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 51,
+          "extracted_characters": 2917,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 52,
+          "extracted_characters": 2827,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 53,
+          "extracted_characters": 3121,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 167,
+      "suggested_visual_page": 30,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "92fa9e37-bd9f-4556-b937-afbd6368988f",
+      "title": "Low-Cost Sensors and Multitemporal Remote Sensing for Operational Turbidity Monitoring in an East African Wetland Environment",
+      "doi": "10.1109/jstars.2024.3381756",
+      "license": "cc-by",
+      "pdf_file": "92fa9e37-bd9f-4556-b937-afbd6368988f.pdf",
+      "chunk_count": 129,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "955cb235191c534e79e03d4e5c84aad40a54b6a3bc7fa56e7ab7ac2fc0bf95d7",
+      "pdf_pages": 19,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 6301,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 6610,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 1765,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 1185,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4200,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 5199,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3647,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2828,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 611,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 5165,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 1823,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 433,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5411,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 6402,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 2676,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 9407,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 9353,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 9488,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 3317,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 129,
+      "suggested_visual_page": 2,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "2ded4ee2-2a6e-44d4-ad3e-5124f2ef3d13",
+      "title": "Advantages of high quality SWIR bands for ocean colour processing: Examples from Landsat-8",
+      "doi": "10.1016/j.rse.2015.02.007",
+      "license": "other-oa",
+      "pdf_file": "2ded4ee2-2a6e-44d4-ad3e-5124f2ef3d13.pdf",
+      "chunk_count": 117,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "bb271744e4af01b2191b3ad4dab93698703ebceaeb4b123d6d5c49176412f807",
+      "pdf_pages": 18,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 5725,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 7736,
+          "chunk_count": 12,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 6317,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 1288,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 2200,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 816,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2674,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2660,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 8191,
+          "chunk_count": 12,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 1843,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 6344,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 1043,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 1036,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 6424,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 9108,
+          "chunk_count": 13,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 893,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 10204,
+          "chunk_count": 15,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 845,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 117,
+      "suggested_visual_page": 2,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "3cbdb57f-8a23-4a1a-a66c-8c91b4687e19",
+      "title": "Optical types of inland and coastal waters",
+      "doi": "10.1002/lno.10674",
+      "license": "cc-by",
+      "pdf_file": "3cbdb57f-8a23-4a1a-a66c-8c91b4687e19.pdf",
+      "chunk_count": 152,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "eab4f648968b9479f9f8f50ac8562c21bafd77830d1480e3f075d74bcea53f0c",
+      "pdf_pages": 26,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 1989,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4551,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 6441,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 3689,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4472,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 4535,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 5664,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2409,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 1784,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 2366,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 959,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 367,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 1100,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 604,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 2944,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 2777,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 2609,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 5055,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 5875,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 6033,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 5635,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 5747,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 5589,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 5519,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 5520,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 26,
+          "extracted_characters": 2304,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 152,
+      "suggested_visual_page": 3,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "182fc597-6499-4441-b50e-8bb0c997a740",
+      "title": "Water Constituents and Water Depth Retrieval from Sentinel-2A—A First Evaluation in an Oligotrophic Lake",
+      "doi": "10.3390/rs8110941",
+      "license": "other-oa",
+      "pdf_file": "182fc597-6499-4441-b50e-8bb0c997a740.pdf",
+      "chunk_count": 167,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "619e96f457cca4391d4d2dc31bd8e71a88d326f0ed1610cf59aad4ff7a68e10a",
+      "pdf_pages": 25,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 3707,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 4312,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 5042,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 5130,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4391,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3884,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 5105,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 4368,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 5182,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 4322,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 700,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 4592,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 3669,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 5357,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 4521,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 3241,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 5054,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 4305,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 5917,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 3690,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 4536,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 4720,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 4327,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 4835,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 1430,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 167,
+      "suggested_visual_page": 14,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "1bd30ec8-2b12-4ccf-bef0-b95f0dc5e779",
+      "title": "Use of Sentinel 2 – MSI for water quality monitoring at Alqueva reservoir, Portugal",
+      "doi": "10.5194/piahs-380-73-2018",
+      "license": "cc-by",
+      "pdf_file": "1bd30ec8-2b12-4ccf-bef0-b95f0dc5e779.pdf",
+      "chunk_count": 35,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "9d4bc498ff0a2d83187006797a63af5c659c8736c886dfad4aab6d2363ca441f",
+      "pdf_pages": 7,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4417,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 5196,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2236,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 3090,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 1207,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3555,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 2317,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 35,
+      "suggested_visual_page": 2,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "016a3b10-44cc-4b63-8073-6366b654685f",
+      "title": "Comparison of Eulerian and Lagrangian transport models for harmful algal bloom forecasts in Lake Erie",
+      "doi": "10.1016/j.envsoft.2023.105641",
+      "license": "public-domain",
+      "pdf_file": "016a3b10-44cc-4b63-8073-6366b654685f.pdf",
+      "chunk_count": 106,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "c5760f52e77cdf14a163d96081e1b8664364bbedbc3b2f0cc7e53d45e8bc50eb",
+      "pdf_pages": 26,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 3128,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 2207,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 4150,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 2185,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3179,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3540,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3904,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2661,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 3128,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 2687,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 909,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 858,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 3444,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 580,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 1822,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 1799,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 1075,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 1939,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 1519,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 1674,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 3959,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 3969,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 3001,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 3120,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 3238,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 26,
+          "extracted_characters": 1352,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 106,
+      "suggested_visual_page": 8,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "14e1c658-1f80-469f-a472-7163ac5490d2",
+      "title": "Improved seasonal prediction of harmful algal blooms in Lake Erie using large-scale climate indices",
+      "doi": "10.1038/s43247-022-00510-w",
+      "license": "cc-by",
+      "pdf_file": "14e1c658-1f80-469f-a472-7163ac5490d2.pdf",
+      "chunk_count": 80,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "32d95067276b66d2ba1f74dc48a9a28f6f40b6b0f300c37bb23e85ef21879f9c",
+      "pdf_pages": 10,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 1991,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 6409,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 6344,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 7721,
+          "chunk_count": 11,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3737,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 1907,
+          "chunk_count": 3,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3127,
+          "chunk_count": 5,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 8955,
+          "chunk_count": 13,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 10105,
+          "chunk_count": 15,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 2324,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 80,
+      "suggested_visual_page": 3,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "2b683b5e-3165-4d7a-8504-ec453bc268c8",
+      "title": "New capabilities of Sentinel-2A/B satellites combined with in situ data for monitoring small harmful algal blooms in complex coastal waters",
+      "doi": "10.1038/s41598-020-65600-1",
+      "license": "cc-by",
+      "pdf_file": "2b683b5e-3165-4d7a-8504-ec453bc268c8.pdf",
+      "chunk_count": 108,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "5e24bcff4324f0a9d3da9347ae0efc42c710c715804110f4844d67cdec251681",
+      "pdf_pages": 14,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4172,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 7532,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 4374,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 1076,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 4474,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 3393,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 1256,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 4091,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 7651,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 7020,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 7128,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 6481,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 7893,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 2171,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 108,
+      "suggested_visual_page": 8,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "02e872bf-59d1-4459-a797-055daf60e213",
+      "title": "A review of remote sensing-based water quality monitoring in turbid coastal waters",
+      "doi": "10.1007/s44295-025-00075-2",
+      "license": "cc-by",
+      "pdf_file": "02e872bf-59d1-4459-a797-055daf60e213.pdf",
+      "chunk_count": 143,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "13edf18f09b977c895069277b2afc1284e670bf99641c11485d6cc4d6605e1e3",
+      "pdf_pages": 18,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4683,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 5773,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 2260,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 4673,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 5363,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 5092,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 2
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 4931,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 4803,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 4614,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 5735,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 5215,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 5108,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5221,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 5119,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 5701,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 7565,
+          "chunk_count": 11,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 9353,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 1224,
+          "chunk_count": 2,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 143,
+      "suggested_visual_page": 7,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "3476993b-857a-40a1-ad74-4de28acf131b",
+      "title": "Living up to the Hype of Hyperspectral Aquatic Remote Sensing: Science, Resources and Outlook",
+      "doi": "10.3389/fenvs.2021.649528",
+      "license": "other-oa",
+      "pdf_file": "3476993b-857a-40a1-ad74-4de28acf131b.pdf",
+      "chunk_count": 250,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "2bdd82a94c96b51bb49dc27d2df6adcfddabf8d06a8c95f4b3faaf8702649a15",
+      "pdf_pages": 26,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 4171,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 5664,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 5983,
+          "chunk_count": 9,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 5874,
+          "chunk_count": 9,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 6903,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 6352,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 6712,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 4928,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 5623,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 4709,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 5043,
+          "chunk_count": 8,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 5204,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 5251,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 6505,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 5756,
+          "chunk_count": 9,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 7225,
+          "chunk_count": 11,
+          "table_marker": true,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 3454,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 3153,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 6660,
+          "chunk_count": 10,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 7465,
+          "chunk_count": 12,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 9086,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 8966,
+          "chunk_count": 13,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 9192,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 9443,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 9094,
+          "chunk_count": 14,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 26,
+          "extracted_characters": 6486,
+          "chunk_count": 10,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 250,
+      "suggested_visual_page": 9,
+      "fulltext_approved": false
+    },
+    {
+      "paper_id": "395974be-d0b2-40bd-89f0-9a4def720e74",
+      "title": "Imaging Spectrometry of Inland and Coastal Waters: State of the Art, Achievements and Perspectives",
+      "doi": "10.1007/s10712-018-9476-0",
+      "license": "cc-by",
+      "pdf_file": "395974be-d0b2-40bd-89f0-9a4def720e74.pdf",
+      "chunk_count": 163,
+      "visual_review": "pending",
+      "semantic_review": "pending",
+      "status": "alignment_pass",
+      "pdf_sha256": "0a6effa0a0e3699f5753ab0b2f14edfa55b5fbb63868d1952b902ddf51ec93b3",
+      "pdf_pages": 29,
+      "pages": [
+        {
+          "page_number": 1,
+          "extracted_characters": 2481,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 2,
+          "extracted_characters": 3758,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 3,
+          "extracted_characters": 4329,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 4,
+          "extracted_characters": 3424,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 5,
+          "extracted_characters": 3401,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 6,
+          "extracted_characters": 2989,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 7,
+          "extracted_characters": 3832,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 8,
+          "extracted_characters": 2641,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 9,
+          "extracted_characters": 1689,
+          "chunk_count": 3,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 2
+        },
+        {
+          "page_number": 10,
+          "extracted_characters": 2294,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 11,
+          "extracted_characters": 726,
+          "chunk_count": 1,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 12,
+          "extracted_characters": 3843,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 13,
+          "extracted_characters": 3735,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 14,
+          "extracted_characters": 3361,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 15,
+          "extracted_characters": 3980,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 16,
+          "extracted_characters": 2963,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 17,
+          "extracted_characters": 2831,
+          "chunk_count": 5,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 18,
+          "extracted_characters": 4247,
+          "chunk_count": 7,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 19,
+          "extracted_characters": 2455,
+          "chunk_count": 4,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 20,
+          "extracted_characters": 3713,
+          "chunk_count": 6,
+          "table_marker": true,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 21,
+          "extracted_characters": 4085,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 22,
+          "extracted_characters": 3702,
+          "chunk_count": 6,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 23,
+          "extracted_characters": 4835,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 24,
+          "extracted_characters": 4810,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": true,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 25,
+          "extracted_characters": 4551,
+          "chunk_count": 7,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 26,
+          "extracted_characters": 4720,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 27,
+          "extracted_characters": 4885,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 28,
+          "extracted_characters": 4857,
+          "chunk_count": 8,
+          "table_marker": false,
+          "method_marker": true,
+          "result_marker": false,
+          "replacement_characters": 0
+        },
+        {
+          "page_number": 29,
+          "extracted_characters": 2467,
+          "chunk_count": 4,
+          "table_marker": false,
+          "method_marker": false,
+          "result_marker": false,
+          "replacement_characters": 0
+        }
+      ],
+      "invalid_page_numbers": [],
+      "text_pages_without_chunks": [],
+      "nonmatching_chunk_ids": [],
+      "chunks_without_section": 163,
+      "suggested_visual_page": 18,
+      "fulltext_approved": false
+    }
+  ],
+  "summary": {
+    "alignment_pass": 20
+  },
+  "limitations": [
+    "Text alignment is against pypdf extraction, not ground-truth PDF layout.",
+    "Matching payloads do not prove embeddings were computed from those payloads.",
+    "Titles and topic tags do not prove task coverage; visual and semantic reviews are separate.",
+    "No source PDF, canonical database or vector index is modified."
+  ]
+}

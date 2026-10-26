@@ -238,7 +238,7 @@ class DefaultServices:
             retriever, self._model(), chunk_store=database
         ).answer(question)
 
-    def research_chat(self, message, conversation=None):
+    def research_chat(self, message, conversation=None, *, execution_context=None):
         from agent.research_agent import ResearchAgentService
         from retrieval.hybrid import HybridRetriever
         from retrieval.keyword_index import KeywordIndex
@@ -268,7 +268,7 @@ class DefaultServices:
             qa_service=qa_service,
             plan_service=plan_service,
             memory_store=database,
-        ).chat(message, conversation)
+        ).chat(message, conversation, execution_context=execution_context)
 
     def rebuild_index(self):
         database = self._database()

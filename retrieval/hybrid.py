@@ -36,6 +36,23 @@ class RetrievalTrace:
     query_variants: list[str] = field(default_factory=list)
     fallback_used: bool = False
     retrieval_confidence: float = 0.0
+    branch_failures: list[str] = field(default_factory=list)
+
+
+def search_branches(keyword, vector, query: str, *, k: int, paper_ids=None):
+    """A broken provider must not discard the other branch's scoped evidence."""
+    results, failures = [], []
+    for name, retriever in (("keyword", keyword), ("vector", vector)):
+        try:
+            chunks = retriever.search(query, k=k, paper_ids=paper_ids)
+            results.append([c for c in chunks if paper_ids is None or c.paper_id in paper_ids])
+        except Exception:
+            # No raw provider exception, query or credentials in diagnostics.
+            failures.append(name)
+            results.append([])
+    if len(failures) == 2:
+        raise RuntimeError("all_retrieval_branches_failed")
+    return results[0], results[1], failures
 
 
 def reciprocal_rank_fusion(
@@ -121,8 +138,8 @@ class HybridRetriever:
             if not scoped_ids:
                 self.last_trace = RetrievalTrace(query=query, latency_ms=(perf_counter() - started) * 1000)
                 return []
-        keyword = self.keyword.search(query, k=self.candidate_k, paper_ids=scoped_ids)
-        vector = self.vector.search(query, k=self.candidate_k, paper_ids=scoped_ids)
+        keyword, vector, branch_failures = search_branches(
+            self.keyword, self.vector, query, k=self.candidate_k, paper_ids=scoped_ids)
         fused = reciprocal_rank_fusion(
             keyword, vector, rrf_k=self.rrf_k,
             keyword_weight=self.keyword_weight, vector_weight=self.vector_weight,
@@ -132,8 +149,9 @@ class HybridRetriever:
         # corpus has no answer. Retry once without that auto-generated scope.
         if not fused and paper_ids is None and self.allowed_paper_ids is not None:
             fallback_used = True
-            keyword = self.keyword.search(query, k=self.candidate_k, paper_ids=None)
-            vector = self.vector.search(query, k=self.candidate_k, paper_ids=None)
+            keyword, vector, retry_failures = search_branches(
+                self.keyword, self.vector, query, k=self.candidate_k, paper_ids=None)
+            branch_failures = list(dict.fromkeys([*branch_failures, *retry_failures]))
             fused = reciprocal_rank_fusion(
                 keyword, vector, rrf_k=self.rrf_k,
                 keyword_weight=self.keyword_weight, vector_weight=self.vector_weight,
@@ -143,6 +161,8 @@ class HybridRetriever:
         paper_counts: dict[str, int] = {}
         results: list[EvidenceChunk] = []
         for item in fused:
+            if paper_ids is not None and item.paper_id not in paper_ids:
+                continue
             identity = (item.paper_id, item.page_number, _normalized_text(item.text))
             if identity in seen:
                 continue
@@ -164,6 +184,7 @@ class HybridRetriever:
             latency_ms=(perf_counter() - started) * 1000,
             query_variants=list(plan_query(query).queries),
             fallback_used=fallback_used,
+            branch_failures=branch_failures,
             retrieval_confidence=(
                 0.0 if not fused else min(1.0, 0.5 + 0.25 * bool(keyword) + 0.25 * bool(vector))
             ),

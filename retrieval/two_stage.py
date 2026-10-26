@@ -7,7 +7,7 @@ import math
 from time import perf_counter
 
 from domain.models import EvidenceChunk
-from retrieval.hybrid import EvidenceRetriever, HybridRetriever
+from retrieval.hybrid import EvidenceRetriever, HybridRetriever, search_branches
 from retrieval.query_expansion import plan_query
 
 
@@ -125,8 +125,8 @@ class TwoStageRetriever:
             self.last_trace = TwoStageTrace(query=query, latency_ms=(perf_counter() - started) * 1000)
             return []
 
-        keyword = self.keyword.search(query, k=self.paper_candidate_k, paper_ids=paper_ids)
-        vector = self.vector.search(query, k=self.paper_candidate_k, paper_ids=paper_ids)
+        keyword, vector, _failures = search_branches(
+            self.keyword, self.vector, query, k=self.paper_candidate_k, paper_ids=paper_ids)
         paper_ids_ranked = _paper_rrf(
             _unique_papers(keyword),
             _unique_papers(vector),
@@ -154,6 +154,34 @@ class TwoStageRetriever:
             results = self._stage2.search(query, k=k)
         else:
             results = self._stage2.search(query, k=k, paper_ids=candidate_papers)
+
+            # Preserve a global evidence branch so the paper shortlist is not a
+            # hard recall bottleneck. An explicit caller scope still applies.
+            try:
+                global_results = HybridRetriever(
+                    self.keyword, self.vector, keyword_weight=self.keyword_weight,
+                    vector_weight=self.vector_weight, rrf_k=self.rrf_k,
+                    candidate_k=self.chunk_candidate_k,
+                    max_chunks_per_paper=self.max_chunks_per_paper,
+                ).search(query, k=k, paper_ids=paper_ids)
+            except Exception:
+                # An optional recall branch must not erase valid scoped hits.
+                global_results = []
+                fallback_used = True
+            merged = []
+            seen = set()
+            paper_counts: dict[str, int] = {}
+            for index in range(max(len(results), len(global_results))):
+                for branch in (results, global_results):
+                    if index >= len(branch):
+                        continue
+                    item = branch[index]
+                    if item.chunk_id in seen or paper_counts.get(item.paper_id, 0) >= self.max_chunks_per_paper:
+                        continue
+                    seen.add(item.chunk_id)
+                    paper_counts[item.paper_id] = paper_counts.get(item.paper_id, 0) + 1
+                    merged.append(item)
+            results = merged[:k]
 
         stage2_trace = self._stage2.last_trace
         self.last_trace = TwoStageTrace(

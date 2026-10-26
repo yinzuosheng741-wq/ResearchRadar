@@ -1090,9 +1090,9 @@ def test_cited_qa_canonicalizes_metadata_removes_bad_and_duplicate_citations():
     assert model.schemas == [CitedAnswer]
 
 
-@pytest.mark.parametrize("mode", ["too_few", "no_valid", "model_error"])
+@pytest.mark.parametrize("mode", ["no_chunks", "no_valid", "model_error"])
 def test_cited_qa_returns_secret_safe_insufficient_fallback(mode):
-    chunks = qa_chunks()[:1] if mode == "too_few" else qa_chunks()
+    chunks = [] if mode == "no_chunks" else qa_chunks()
     if mode == "no_valid":
         model = FakeQaModel(proposed_answer([citation("unknown")]))
     elif mode == "model_error":
@@ -1109,7 +1109,7 @@ def test_cited_qa_returns_secret_safe_insufficient_fallback(mode):
     assert answer.suggested_search_query
     assert "must-not-leak" not in answer.answer_markdown
     assert "Confident model prose" not in answer.answer_markdown
-    if mode == "too_few":
+    if mode == "no_chunks":
         assert model.schemas == []
 
 

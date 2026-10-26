@@ -29,6 +29,19 @@ class RecordingRetriever:
         return filtered[:k]
 
 
+def test_optional_global_branch_failure_keeps_shortlist_evidence():
+    class FailsAfterShortlist(RecordingRetriever):
+        def search(self, query, *, k, paper_ids=None):
+            if len(self.calls) >= 2:
+                raise TimeoutError()
+            return super().search(query, k=k, paper_ids=paper_ids)
+
+    retriever = TwoStageRetriever(FailsAfterShortlist([chunk("p1:c1")]),
+                                  FailsAfterShortlist([chunk("p1:c2")]))
+    assert retriever.search("query")
+    assert retriever.last_trace.fallback_used
+
+
 def test_stage_one_collapses_chunk_rankings_to_unique_papers_before_rrf():
     keyword = RecordingRetriever([chunk("p1:c1"), chunk("p1:c2"), chunk("p2:c1")])
     vector = RecordingRetriever([chunk("p2:c2"), chunk("p3:c1")])

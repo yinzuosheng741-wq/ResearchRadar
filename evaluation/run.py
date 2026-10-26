@@ -449,7 +449,7 @@ def run_evaluation(
                 retrieval_k = effective_config["retrieval_k"]
                 ranked = retriever.search(question.question, k=retrieval_k)
                 ranked_chunk_ids = _safe_chunk_ids(ranked)
-                ranked_paper_ids = [item.split(":", 1)[0] for item in ranked_chunk_ids]
+                ranked_paper_ids = [item.paper_id for item in ranked]
                 group_recall = evidence_group_recall_at_k(
                     ranked_chunk_ids,
                     [group.chunk_ids for group in question.evidence_groups],

@@ -45,6 +45,17 @@ def test_memory_round_trips_structured_scope(tmp_path):
     assert loaded.updated_at.tzinfo is not None
 
 
+def test_reconfirming_scope_removes_cleared_fields_and_stale_provenance(tmp_path):
+    database = ResearchDatabase(tmp_path / "research.db")
+    service = ResearchAgentService(model=None, qa_service=None, plan_service=None, memory_store=database)
+    service.confirm_scope(ResearchScope(topic="old", sensor="Sentinel-2"))
+    service.confirm_scope(ResearchScope(topic="new"))
+    memory = database.get_project_memory()
+    assert memory.sensors == []
+    assert all(f.field != "sensor" for f in memory.facts)
+    assert next(f.value for f in memory.facts if f.field == "topic") == "new"
+
+
 def test_unknown_confirmed_paper_id_is_rejected(tmp_path):
     database = ResearchDatabase(tmp_path / "research.db")
 

@@ -15,6 +15,8 @@ from domain.models import (
     ResearchPlanFinding,
 )
 from utils.prompt_loader import load_research_plan_prompt
+from agent.execution import consume
+from retrieval.coordinator import retrieve_evidence, SearchAudit
 
 
 class Retriever(Protocol):
@@ -60,15 +62,22 @@ class ResearchPlanService:
         self.model = model
         self.chunk_store = chunk_store
         self.plan_k = plan_k
+        self.last_search_audit = SearchAudit()
 
-    def plan(self, topic: str) -> ResearchPlan:
+    def plan(self, topic: str, *, paper_ids: list[str] | None = None,
+             supplemental_queries: list[str] | None = None) -> ResearchPlan:
         normalized_topic = _normalized(topic)
         if not normalized_topic:
             raise ValueError("research_plan_topic_required")
         try:
-            retrieved = self.retriever.search(normalized_topic, k=self.plan_k)
+            result = retrieve_evidence(self.retriever, normalized_topic, k=self.plan_k,
+                                       paper_ids=paper_ids, supplemental_queries=supplemental_queries)
+            self.last_search_audit = result.audit
+            retrieved = result.chunks
             ids = list(dict.fromkeys(item.chunk_id for item in retrieved))
             chunks = self.chunk_store.get_chunks_by_ids(ids)
+            if paper_ids is not None:
+                chunks = [chunk for chunk in chunks if chunk.paper_id in paper_ids]
         except Exception:
             return self._insufficient(normalized_topic)
         if len(chunks) < 2:
@@ -79,6 +88,7 @@ class ResearchPlanService:
             HumanMessage(content=self._request(normalized_topic, chunks)),
         ]
         try:
+            consume("model_calls")
             raw = self.model.with_structured_output(_PlanDraft).invoke(request)
             draft = _PlanDraft.model_validate(raw)
         except Exception:

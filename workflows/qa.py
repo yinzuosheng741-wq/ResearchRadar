@@ -10,7 +10,11 @@ from typing import Protocol
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from domain.models import AnswerCitation, AnswerClaim, CitedAnswer, EvidenceChunk
+from agent.execution import consume
+from agent.evidence_review import EvidenceAssessment, needs_evidence_review, review_evidence
+from retrieval.coordinator import retrieve_evidence, SearchAudit, merge_audits
 from retrieval.query_expansion import plan_query
+from retrieval.context import ContextAudit, assemble_context
 from utils.prompt_loader import load_cited_qa_prompt
 
 
@@ -129,27 +133,57 @@ class CitedQaService:
         self.chunk_store = chunk_store
         self.answer_k = answer_k
         self.last_trace = QATrace(status="not_started")
+        self.last_search_audit = SearchAudit()
+        self.last_review = EvidenceAssessment()
+        self.last_context_audit = ContextAudit()
 
-    def answer(self, question: str) -> CitedAnswer:
+    def answer(self, question: str, *, paper_ids: list[str] | None = None,
+               supplemental_queries: list[str] | None = None) -> CitedAnswer:
         started = perf_counter()
+        self.last_search_audit = SearchAudit()
+        self.last_review = EvidenceAssessment()
+        self.last_context_audit = ContextAudit()
         retrieval_started = started
         try:
             # Keep English/general questions on the existing single-query path.
             # Domain questions written in CJK use the bounded deterministic plan
             # so aliases such as 叶绿素 -> chlorophyll-a can reach the index.
             plan = plan_query(question)
-            use_plan = any(ord(char) > 127 for char in question) or len(plan.queries) > 1
-            queries = list(plan.queries[:4]) if use_plan else [question]
-            retrieved_by_id: dict[str, EvidenceChunk] = {}
-            for query in queries:
-                for chunk in self.retriever.search(query, k=self.answer_k):
-                    retrieved_by_id.setdefault(chunk.chunk_id, chunk)
-            retrieved = list(retrieved_by_id.values())[: self.answer_k]
+            result = retrieve_evidence(
+                self.retriever, question, k=self.answer_k, paper_ids=paper_ids,
+                supplemental_queries=supplemental_queries,
+                max_queries=4,
+            )
+            self.last_search_audit = result.audit
+            retrieved = result.chunks
             chunk_ids = list(dict.fromkeys(chunk.chunk_id for chunk in retrieved))
             chunks = self.chunk_store.get_chunks_by_ids(chunk_ids)
-            context_loader = getattr(self.chunk_store, "get_chunks_with_context", None)
-            if callable(context_loader):
-                chunks = context_loader(chunk_ids, window=1)
+            if paper_ids is not None:
+                chunks = [chunk for chunk in chunks if chunk.paper_id in paper_ids]
+            # Complex comparisons get one specialist review and at most two new searches.
+            if needs_evidence_review(question):
+                self.last_review = review_evidence(self.model, question, chunks)
+                new_queries = list(dict.fromkeys(q.strip()[:4000] for q in self.last_review.supplemental_queries if q.strip()))[:2]
+                if new_queries:
+                    try:
+                        extra = retrieve_evidence(
+                            self.retriever, new_queries[0], k=self.answer_k, paper_ids=paper_ids,
+                            supplemental_queries=new_queries[1:], max_queries=len(new_queries),
+                        )
+                        # Interleave rounds so missing-aspect evidence survives the context budget.
+                        combined = []
+                        for i in range(max(len(retrieved), len(extra.chunks))):
+                            combined.extend(items[i] for items in (retrieved, extra.chunks) if i < len(items))
+                        retrieved = list({c.chunk_id: c for c in combined}.values())[:self.answer_k]
+                        chunk_ids = [c.chunk_id for c in retrieved]
+                        self.last_search_audit = merge_audits(result.audit, extra.audit, chunk_ids)
+                        chunks = self.chunk_store.get_chunks_by_ids(chunk_ids)
+                    except Exception:
+                        pass  # A failed supplemental round preserves the initial evidence.
+            chunks, self.last_context_audit = assemble_context(
+                self.chunk_store, chunk_ids, paper_ids=paper_ids,
+                max_chunks=self.answer_k * 3, canonical_chunks=chunks,
+            )
             retrieval_confidence = float(
                 getattr(getattr(self.retriever, "last_trace", None), "retrieval_confidence", 0.0)
             ) or (0.8 if retrieved else 0.0)
@@ -164,7 +198,7 @@ class CitedQaService:
             )
             return self._insufficient(question, level="none", reason="all retrieval branches failed")
         retrieval_ms = (perf_counter() - retrieval_started) * 1000
-        if len(chunks) < 2:
+        if not chunks:
             self.last_trace = QATrace(
                 status="insufficient_chunks",
                 retrieval_ms=round(retrieval_ms, 3),
@@ -177,7 +211,7 @@ class CitedQaService:
                 evidence_confidence=_evidence_confidence(chunks),
                 answerability="insufficient_evidence",
             )
-            return self._insufficient(question, level="related", reason="related chunks were found, but fewer than two canonical chunks are available")
+            return self._insufficient(question, level="none", reason="no canonical evidence chunks are available")
 
         request = [
             SystemMessage(content=load_cited_qa_prompt()),
@@ -185,6 +219,7 @@ class CitedQaService:
         ]
         model_started = perf_counter()
         try:
+            consume("model_calls")
             proposed_raw = self.model.with_structured_output(CitedAnswer).invoke(
                 request
             )
@@ -193,7 +228,7 @@ class CitedQaService:
             if _is_model_timeout(exc):
                 answer = self._evidence_fallback(chunks)
                 self.last_trace = QATrace(
-                    status="model_timeout_fallback",
+                    status="model_timeout_fallback" if answer.evidence_sufficient else "model_timeout_insufficient",
                     retrieval_ms=round(retrieval_ms, 3),
                     model_ms=round((perf_counter() - model_started) * 1000, 3),
                     retrieved_chunks=len(retrieved),
@@ -204,7 +239,7 @@ class CitedQaService:
                     intent_confidence=plan.confidence,
                     retrieval_confidence=retrieval_confidence,
                     evidence_confidence=_evidence_confidence(chunks),
-                    answerability="answerable",
+                    answerability="answerable" if answer.evidence_sufficient else "insufficient_evidence",
                 )
                 return answer
             self.last_trace = QATrace(
@@ -220,7 +255,7 @@ class CitedQaService:
                 evidence_confidence=_evidence_confidence(chunks),
                 answerability="model_failed",
             )
-            return self._insufficient(question, level="related", reason="the model marked the retrieved evidence as insufficient")
+            return self._insufficient(question, level="related", reason="answer generation failed")
         if not proposed.evidence_sufficient:
             self.last_trace = QATrace(
                 status="model_marked_insufficient",
@@ -235,7 +270,7 @@ class CitedQaService:
                 evidence_confidence=_evidence_confidence(chunks),
                 answerability="insufficient_evidence",
             )
-            return self._insufficient(question, level="weak", reason="retrieval returned candidates, but the model response could not be validated")
+            return self._insufficient(question, level="weak", reason="the model marked the retrieved evidence as insufficient")
 
         claims = proposed.claims
         if not claims and proposed.citations:
@@ -275,7 +310,7 @@ class CitedQaService:
             citations=surviving,
             evidence_sufficient=True,
             evidence_level="direct",
-            evidence_reason="multiple canonical chunks passed citation validation",
+            evidence_reason="citations matched canonical chunks; semantic support is not independently verified",
         )
         self.last_trace = QATrace(
             status="answered",
@@ -318,7 +353,7 @@ class CitedQaService:
                 )
             )
         if len(claims) < 2:
-            return CitedQaService._insufficient("", level="none", reason="fewer than two usable canonical excerpts")
+            return CitedQaService._insufficient("", level="related", reason="model unavailable and too few usable excerpts for an extractive fallback")
         return CitedAnswer(
             answer_markdown="\n\n".join(claim.text for claim in claims),
             claims=claims,

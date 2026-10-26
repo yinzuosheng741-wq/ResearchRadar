@@ -1,0 +1,19 @@
+# CPU-only portable runtime uses remote embeddings; local BGE/torch is optional.
+langchain==1.3.14
+langchain-community==0.4.2
+langchain-core==1.5.4
+langchain-openai==1.4.3
+langchain-text-splitters==1.1.2
+langgraph==1.2.10
+faiss-cpu>=1.7.4
+requests>=2.32,<3
+pypdf==6.15.0
+trafilatura>=1.6.0
+beautifulsoup4>=4.12.0
+pyyaml>=6.0.1
+python-dotenv==1.0.1
+pydantic>=2.10,<3
+tenacity>=8.2.3
+streamlit==1.40.1
+websockets>=14,<16
+pywebview>=6,<7

@@ -12,6 +12,7 @@ from langgraph.graph import END, START, StateGraph
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from agent.skills import DEFAULT_SKILL_REGISTRY, SkillExecutor, SkillRegistry
+from agent.execution import ExecutionContext, ExecutionDenied, consume, current_context, execution_scope
 
 from domain.models import (
     AnswerCitation,
@@ -167,12 +168,13 @@ def build_research_agent_graph(
             ),
         ]
         try:
+            consume("model_calls")
             raw = model.with_structured_output(ResearchIntent).invoke(request)
             decision = ResearchIntent.model_validate(raw)
             planned = plan_query(state["user_text"])
             updates = {
                 "intent": planned.intent,
-                "queries": list(planned.queries),
+                "queries": list(dict.fromkeys([*decision.queries, *planned.queries]))[:6],
                 "confidence": planned.confidence,
                 "clarification_needed": planned.clarification_needed,
             }
@@ -212,7 +214,8 @@ def build_research_agent_graph(
                 ),
             )
         else:
-            payload = {"query": decision.rewritten_query}
+            payload = {"query": decision.rewritten_query,
+                       "supplemental_queries": decision.queries[:4]}
             execution = executor.execute(decision.skill_id, payload)
             if execution.output is None:
                 reply = ResearchAgentReply(
@@ -297,7 +300,6 @@ class ResearchAgentService:
         if self.memory_store is None:
             raise RuntimeError("research_memory_unavailable")
         memory = self.memory_store.get_project_memory()
-        now_facts = {fact.field: fact for fact in memory.facts}
         values = {
             "topic": scope.topic.strip(),
             "prediction_target": scope.prediction_target.strip(),
@@ -308,6 +310,9 @@ class ResearchAgentService:
                 item.strip() for item in scope.method_constraints if item.strip()
             ),
         }
+        # Confirmation replaces this scope, including clearing removed fields.
+        # Retaining their old provenance would reintroduce forgotten facts.
+        now_facts = {fact.field: fact for fact in memory.facts if fact.field not in values}
         for field, value in values.items():
             if value:
                 now_facts[field] = MemoryFact(
@@ -320,7 +325,7 @@ class ResearchAgentService:
             update={
                 "topic": scope.topic,
                 "prediction_target": scope.prediction_target,
-                "sensors": [scope.sensor] if scope.sensor else memory.sensors,
+                "sensors": [scope.sensor] if scope.sensor else [],
                 "study_area": scope.study_area,
                 "year_range": scope.year_range,
                 "method_constraints": scope.method_constraints,
@@ -333,6 +338,8 @@ class ResearchAgentService:
         self,
         text: str,
         conversation: ResearchConversationState | dict[str, Any] | None = None,
+        *,
+        execution_context: ExecutionContext | None = None,
     ) -> ResearchAgentTurn:
         if not isinstance(text, str) or not text.strip() or len(text) > 4000:
             raise ValueError("research_agent_message_invalid")
@@ -341,14 +348,21 @@ class ResearchAgentService:
             if isinstance(conversation, ResearchConversationState)
             else ResearchConversationState.model_validate(conversation or {})
         )
-        result = self.graph.invoke(
-            {
-                "user_text": text.strip(),
-                "conversation": current.model_dump(mode="json"),
-                "model_calls": 0,
-                "tool_calls": 0,
-            }
-        )
+        # Trusted caller supplies capabilities; model output cannot change them.
+        with execution_scope(execution_context or ExecutionContext()):
+            try:
+                result = self.graph.invoke(
+                {
+                    "user_text": text.strip(),
+                    "conversation": current.model_dump(mode="json"),
+                    "model_calls": 0,
+                    "tool_calls": 0,
+                }
+                )
+            except ExecutionDenied:
+                result = {"decision": {"skill_id": "general_chat", "rewritten_query": text.strip()},
+                          "reply": ResearchAgentReply(content="本轮执行预算已耗尽或执行范围受限，请缩小问题后重试。", tool_name="general_chat",
+                                                      evidence_sufficient=False).model_dump(mode="json")}
         if result.get("model_calls", 0) > MAX_ROUTER_CALLS or result.get("tool_calls", 0) > MAX_TOOL_CALLS:
             raise RuntimeError("research_agent_budget_exceeded")
         decision = ResearchIntent.model_validate(result["decision"])
@@ -395,6 +409,7 @@ def _general_chat_reply(
 ) -> ResearchAgentReply:
     """Keep ordinary conversation available without pretending it is local evidence."""
     if hasattr(model, "invoke"):
+        consume("model_calls")
         response = model.invoke(
             [
                 SystemMessage(
@@ -558,6 +573,10 @@ def _build_diagnostics(
         retrieval_ms=retrieval_ms,
         model_ms=model_ms,
         total_ms=_safe_ms(total_ms),
+        model_calls=current_context().model_calls if current_context() else 0,
+        tool_calls=current_context().tool_calls if current_context() else 0,
+        search_calls=current_context().search_calls if current_context() else 0,
+        policy_events=list(current_context().events) if current_context() else [],
     )
 
 

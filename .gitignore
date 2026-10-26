@@ -24,3 +24,6 @@ data/sdd/
 *.db
 *.sqlite
 *.sqlite3
+dist/
+data/desktop/
+.test-tmp-*/
