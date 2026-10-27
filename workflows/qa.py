@@ -10,7 +10,7 @@ from typing import Protocol
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from domain.models import AnswerCitation, AnswerClaim, CitedAnswer, EvidenceChunk
-from agent.execution import consume
+from agent.execution import ExecutionDenied, consume
 from agent.evidence_review import EvidenceAssessment, needs_evidence_review, review_evidence
 from retrieval.coordinator import retrieve_evidence, SearchAudit, merge_audits
 from retrieval.query_expansion import plan_query
@@ -179,6 +179,11 @@ class CitedQaService:
                         chunk_ids = [c.chunk_id for c in retrieved]
                         self.last_search_audit = merge_audits(result.audit, extra.audit, chunk_ids)
                         chunks = self.chunk_store.get_chunks_by_ids(chunk_ids)
+                    except ExecutionDenied as exc:
+                        if str(exc) != "search_calls_exhausted":
+                            raise
+                        # Query expansion may stop at its own search budget;
+                        # the writer can still use the initial canonical data.
                     except Exception:
                         pass  # A failed supplemental round preserves the initial evidence.
             chunks, self.last_context_audit = assemble_context(
@@ -188,6 +193,8 @@ class CitedQaService:
             retrieval_confidence = float(
                 getattr(getattr(self.retriever, "last_trace", None), "retrieval_confidence", 0.0)
             ) or (0.8 if retrieved else 0.0)
+        except ExecutionDenied:
+            raise
         except Exception:
             self.last_trace = QATrace(
                 status="retrieval_failed",
@@ -197,7 +204,8 @@ class CitedQaService:
                 intent_confidence=plan.confidence if "plan" in locals() else 0.0,
                 answerability="retrieval_failed",
             )
-            return self._insufficient(question, level="none", reason="all retrieval branches failed")
+            return self._insufficient(question, level="none", reason="all retrieval branches failed",
+                                      execution_error="retrieval_failed")
         retrieval_ms = (perf_counter() - retrieval_started) * 1000
         if not chunks:
             self.last_trace = QATrace(
@@ -240,9 +248,13 @@ class CitedQaService:
                 request
             )
             proposed = CitedAnswer.model_validate(proposed_raw)
+        except ExecutionDenied:
+            raise
         except Exception as exc:
             if _is_model_timeout(exc):
                 answer = self._evidence_fallback(chunks)
+                if not answer.evidence_sufficient:
+                    answer = answer.model_copy(update={"execution_error": "model_failed"})
                 self.last_trace = QATrace(
                     status="model_timeout_fallback" if answer.evidence_sufficient else "model_timeout_insufficient",
                     retrieval_ms=round(retrieval_ms, 3),
@@ -271,7 +283,8 @@ class CitedQaService:
                 evidence_confidence=_evidence_confidence(chunks),
                 answerability="model_failed",
             )
-            return self._insufficient(question, level="related", reason="answer generation failed")
+            return self._insufficient(question, level="related", reason="answer generation failed",
+                                      execution_error="model_failed")
         if not proposed.evidence_sufficient:
             self.last_trace = QATrace(
                 status="model_marked_insufficient",
@@ -414,7 +427,8 @@ class CitedQaService:
         )
 
     @staticmethod
-    def _insufficient(question: str, *, level: str = "related", reason: str | None = None) -> CitedAnswer:
+    def _insufficient(question: str, *, level: str = "related", reason: str | None = None,
+                      execution_error: str | None = None) -> CitedAnswer:
         normalized = " ".join(question.split()) or "water color remote sensing prediction"
         return CitedAnswer(
             answer_markdown="Evidence is insufficient to support a reliable answer.",
@@ -423,4 +437,5 @@ class CitedQaService:
             suggested_search_query=f"{normalized} supporting literature",
             evidence_level=level,
             evidence_reason=reason or "retrieval did not produce enough directly citable evidence",
+            execution_error=execution_error,
         )

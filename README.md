@@ -1,5 +1,7 @@
 # 水色遥感预测科研助手
 
+框架更新（2026-10-27）：Skill 1.1 区分证据不足、策略拦截和运行失败，避免异常触发错误的通用兜底；高星项目对标、执行契约与演进计划见[框架演进设计](docs/FRAMEWORK_EVOLUTION_20261027.md)。
+
 2026-10-27 更新：研究工作区采用墨蓝导航、雷达标识和纵向任务入口，精简控件描边并适配不同版本控件。见[视觉识别设计](docs/VISUAL_IDENTITY_20261027.md)。任务草稿、对话导出与按需初始化见[交互与依赖设计](docs/DESKTOP_REFINEMENT_20261027.md)，引用导航与范围校验见[证据工作区设计](docs/EVIDENCE_WORKSPACE_20261027.md)。
 
 ![ResearchRadar 桌面研究工作区](docs/assets/workspace-identity-20261027.png)

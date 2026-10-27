@@ -103,6 +103,7 @@ class CitedAnswer(BaseModel):
     suggested_search_query: str | None = None
     evidence_level: Literal["direct", "related", "weak", "none"] = "none"
     evidence_reason: str | None = None
+    execution_error: Literal["retrieval_failed", "model_failed"] | None = None
 
 
 class SeedReport(BaseModel):
@@ -162,6 +163,7 @@ class ResearchPlan(BaseModel):
     suggested_steps: list[str] = Field(default_factory=list)
     evidence_sufficient: bool
     suggested_search_query: str | None = None
+    execution_error: Literal["retrieval_failed", "model_failed"] | None = None
 
 
 class AgentDiagnostics(BaseModel):
@@ -186,6 +188,8 @@ class AgentDiagnostics(BaseModel):
     tool_calls: int = Field(default=0, ge=0)
     search_calls: int = Field(default=0, ge=0)
     policy_events: list[dict[str, str | int]] = Field(default_factory=list)
+    execution_status: Literal["unknown", "success", "insufficient_evidence", "blocked", "invalid_input", "failed"] = "unknown"
+    execution_error: str | None = None
 
 
 class ResearchConversationMessage(BaseModel):

@@ -105,7 +105,11 @@ def retrieve_evidence(
             for rank, chunk_id in enumerate(ranking, 1):
                 scores[chunk_id] = scores.get(chunk_id, 0.0) + 1.0 / (60 + rank)
             logger.info("retrieval_branch_finished query_hash=%s count=%d", query_hash, len(ranking))
-        except ExecutionDenied:
+        except ExecutionDenied as exc:
+            # Partial search coverage can stop query expansion. A request
+            # deadline or any other policy denial must stop the whole task.
+            if str(exc) != "search_calls_exhausted":
+                raise
             exhausted = True
             if not rankings:
                 raise

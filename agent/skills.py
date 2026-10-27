@@ -5,8 +5,9 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from inspect import signature
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from domain.models import CitedAnswer, ResearchPlan
 from agent.execution import ExecutionDenied, consume, current_context, skill_model_budget
@@ -32,7 +33,7 @@ class SkillSpec:
     output_model: type[BaseModel]
     fallback_text: str
     max_steps: int = 1
-    version: str = "1.0"
+    version: str = "1.1"
     requires_evidence: bool = True
     allowed_data_scope: str = "local_core_rag"
     max_model_calls: int = 1
@@ -50,6 +51,7 @@ class SkillExecution:
     output: BaseModel | None
     message: str
     error_code: str | None = None
+    status: Literal["success", "insufficient_evidence", "blocked", "invalid_input", "failed"] = "failed"
 
 
 class SkillRegistry:
@@ -90,10 +92,13 @@ class SkillExecutor:
                     context.record("blocked", "skill_scope_denied")
                     raise ExecutionDenied("skill_scope_denied")
             consume("tool_calls")
-            request = self.registry.validate(skill_id, payload)
+            try:
+                request = self.registry.validate(skill_id, payload)
+            except (ValidationError, TypeError, ValueError):
+                return self._failure(spec, code="skill_input_invalid", status="invalid_input")
             handler = self.handlers.get(skill_id)
             if handler is None:
-                return self._failure(spec)
+                return self._failure(spec, code="skill_handler_unavailable")
             values = request.model_dump()
             argument = values.get("query", values.get("paper_ids"))
             parameters = signature(handler).parameters
@@ -107,25 +112,38 @@ class SkillExecutor:
             with skill_model_budget(spec.max_model_calls):
                 output = spec.output_model.model_validate(handler(argument, **kwargs))
             if context is not None:
+                context.check_deadline()
+            if getattr(output, "execution_error", None):
+                return self._failure(spec, code=output.execution_error)
+            if context is not None:
                 context.record("finished", skill_id)
         except ExecutionDenied as exc:
-            return SkillExecution(skill_id=skill_id, output=None, message=spec.fallback_text,
-                                  error_code=str(exc))
+            return self._failure(spec, code=str(exc), status="blocked")
         except Exception:
             return self._failure(spec)
         return SkillExecution(
             skill_id=skill_id,
             output=output,
             message="",
+            status="success" if getattr(output, "evidence_sufficient", True) else "insufficient_evidence",
         )
 
     @staticmethod
-    def _failure(spec: SkillSpec) -> SkillExecution:
+    def _failure(spec: SkillSpec, *, code: str = "research_skill_failed", status="failed") -> SkillExecution:
+        messages = {
+            "blocked": "本轮执行预算已耗尽或执行范围受限，请缩小问题后重试。",
+            "invalid_input": "研究任务参数无效，请检查问题后重试。",
+            "failed": spec.fallback_text,
+        }
+        context = current_context()
+        if context is not None:
+            context.record(status, code)
         return SkillExecution(
             skill_id=spec.skill_id,
             output=None,
-            message=spec.fallback_text,
-            error_code="research_skill_failed",
+            message=messages[status],
+            error_code=code,
+            status=status,
         )
 
 
@@ -137,14 +155,14 @@ DEFAULT_SKILL_REGISTRY = SkillRegistry(
             description="Answer a research question from validated local evidence.",
             input_model=EvidenceQaInput,
             output_model=CitedAnswer,
-            fallback_text="当前本地知识库证据不足，无法给出可靠回答。",
+            fallback_text="证据问答暂时未能完成，请稍后重试；本次未判定知识库证据是否充足。",
         ),
         SkillSpec(
             skill_id="research_plan",
             description="Build a bounded research plan from local literature evidence.",
             input_model=ResearchPlanInput,
             output_model=ResearchPlan,
-            fallback_text="当前本地知识库不足以生成可靠研究路线。",
+            fallback_text="研究路线任务暂时未能完成，请稍后重试；本次未判定知识库证据是否充足。",
         ),
     ]
 )

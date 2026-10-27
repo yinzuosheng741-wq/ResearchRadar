@@ -170,6 +170,9 @@ def build_research_agent_graph(
         try:
             consume("model_calls")
             raw = model.with_structured_output(ResearchIntent).invoke(request)
+            context = current_context()
+            if context is not None:
+                context.check_deadline()
             decision = ResearchIntent.model_validate(raw)
             planned = plan_query(state["user_text"])
             updates = {
@@ -188,6 +191,8 @@ def build_research_agent_graph(
             decision = decision.model_copy(update=updates)
             route_mode = "model"
             route_reason = "model_structured_route"
+        except ExecutionDenied:
+            raise
         except Exception:
             decision = _fallback_intent(state["user_text"])
             route_mode = "fallback"
@@ -203,6 +208,7 @@ def build_research_agent_graph(
     def use_tool(state: _AgentState) -> dict[str, Any]:
         started = perf_counter()
         decision = ResearchIntent.model_validate(state["decision"])
+        execution = None
         if decision.skill_id == "general_chat":
             reply = _general_chat_reply(
                 model,
@@ -265,6 +271,11 @@ def build_research_agent_graph(
             route_ms=state.get("route_ms", 0.0),
             tool_ms=(perf_counter() - started) * 1000,
         )
+        if execution is not None:
+            diagnostics = diagnostics.model_copy(update={
+                "execution_status": execution.status,
+                "execution_error": execution.error_code,
+            })
         reply = reply.model_copy(update={"diagnostics": diagnostics})
         return {"reply": reply.model_dump(mode="json"), "tool_calls": 1}
 
@@ -359,10 +370,17 @@ class ResearchAgentService:
                     "tool_calls": 0,
                 }
                 )
-            except ExecutionDenied:
+            except ExecutionDenied as exc:
+                context = current_context()
+                diagnostics = AgentDiagnostics(
+                    route_mode="fallback", route_reason="fallback_rule_general_chat", skill_id="general_chat",
+                    fallback=True, execution_status="blocked", execution_error=str(exc),
+                    model_calls=context.model_calls, tool_calls=context.tool_calls,
+                    search_calls=context.search_calls, policy_events=list(context.events),
+                )
                 result = {"decision": {"skill_id": "general_chat", "rewritten_query": text.strip()},
                           "reply": ResearchAgentReply(content="本轮执行预算已耗尽或执行范围受限，请缩小问题后重试。", tool_name="general_chat",
-                                                      evidence_sufficient=False).model_dump(mode="json")}
+                                                      evidence_sufficient=False, diagnostics=diagnostics).model_dump(mode="json")}
         if result.get("model_calls", 0) > MAX_ROUTER_CALLS or result.get("tool_calls", 0) > MAX_TOOL_CALLS:
             raise RuntimeError("research_agent_budget_exceeded")
         decision = ResearchIntent.model_validate(result["decision"])
@@ -422,6 +440,9 @@ def _general_chat_reply(
                 HumanMessage(content=user_text),
             ]
         )
+        context = current_context()
+        if context is not None:
+            context.check_deadline()
         content = getattr(response, "content", response)
     else:
         content = "当前模型未提供普通对话接口，请配置可用模型后重试。"
@@ -562,6 +583,7 @@ def _build_diagnostics(
         ),
         skill_id=skill_id,
         skill_version=skill_version,
+        execution_status="success" if skill_id == "general_chat" else "unknown",
         evidence_sufficient=reply.evidence_sufficient,
         retrieval_candidates=max(retrieval_candidates, 0),
         evidence_chunks=max(evidence_chunks, 0),

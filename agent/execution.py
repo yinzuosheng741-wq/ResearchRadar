@@ -31,10 +31,13 @@ class ExecutionContext:
     _started: float = field(default_factory=monotonic, repr=False)
     _skill_model_limit: int | None = field(default=None, repr=False)
 
-    def consume(self, resource: str) -> None:
+    def check_deadline(self) -> None:
         if monotonic() - self._started >= self.timeout_seconds:
             self.record("blocked", "request_deadline_exceeded")
             raise ExecutionDenied("request_deadline_exceeded")
+
+    def consume(self, resource: str) -> None:
+        self.check_deadline()
         maximum = getattr(self, f"max_{resource}")
         if resource == "model_calls" and self._skill_model_limit is not None:
             maximum = min(maximum, self._skill_model_limit)

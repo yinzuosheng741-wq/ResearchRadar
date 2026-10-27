@@ -14,7 +14,7 @@ def test_registry_exposes_only_two_local_skills():
     ]
     assert all(spec.max_steps == 1 for spec in specs)
     assert all(spec.fallback_text for spec in specs)
-    assert all(spec.version == "1.0" for spec in specs)
+    assert all(spec.version == "1.1" for spec in specs)
     assert DEFAULT_SKILL_REGISTRY.get("evidence_qa").requires_evidence is True
     assert DEFAULT_SKILL_REGISTRY.get("evidence_qa").allowed_data_scope == "local_core_rag"
 
@@ -43,7 +43,7 @@ def test_skill_input_schema_is_validated():
         DEFAULT_SKILL_REGISTRY.validate("evidence_qa", {"query": ""})
 
 
-def test_skill_executor_validates_output_and_returns_declared_fallback():
+def test_skill_executor_validates_output_and_distinguishes_runtime_failure():
     executor = SkillExecutor(
         DEFAULT_SKILL_REGISTRY,
         handlers={
@@ -62,9 +62,9 @@ def test_skill_executor_validates_output_and_returns_declared_fallback():
 
     assert success.output.answer_markdown == "supported"
     assert success.error_code is None
+    assert success.status == "success"
     assert failure.output is None
     assert failure.error_code == "research_skill_failed"
-    assert failure.message == DEFAULT_SKILL_REGISTRY.get(
-        "research_plan"
-    ).fallback_text
+    assert failure.status == "failed"
+    assert "未判定" in failure.message
     assert "secret" not in failure.message

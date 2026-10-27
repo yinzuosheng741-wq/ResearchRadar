@@ -8,7 +8,7 @@ import logging
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, ConfigDict, Field
 
-from agent.execution import consume
+from agent.execution import ExecutionDenied, consume
 from domain.models import EvidenceChunk
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,8 @@ def review_evidence(model, question: str, chunks: list[EvidenceChunk]) -> Eviden
         logger.info("evidence_review_finished missing=%d proposed_queries=%d",
                     len(result.missing_aspects), len(result.supplemental_queries))
         return result
+    except ExecutionDenied:
+        raise
     except Exception:
         logger.warning("evidence_review_unavailable")
         return EvidenceAssessment()

@@ -15,7 +15,7 @@ from domain.models import (
     ResearchPlanFinding,
 )
 from utils.prompt_loader import load_research_plan_prompt
-from agent.execution import consume
+from agent.execution import ExecutionDenied, consume
 from retrieval.coordinator import retrieve_evidence, SearchAudit
 
 
@@ -69,6 +69,7 @@ class ResearchPlanService:
         normalized_topic = _normalized(topic)
         if not normalized_topic:
             raise ValueError("research_plan_topic_required")
+        self.last_search_audit = SearchAudit()
         try:
             result = retrieve_evidence(self.retriever, normalized_topic, k=self.plan_k,
                                        paper_ids=paper_ids, supplemental_queries=supplemental_queries)
@@ -78,8 +79,10 @@ class ResearchPlanService:
             chunks = self.chunk_store.get_chunks_by_ids(ids)
             if paper_ids is not None:
                 chunks = [chunk for chunk in chunks if chunk.paper_id in paper_ids]
+        except ExecutionDenied:
+            raise
         except Exception:
-            return self._insufficient(normalized_topic)
+            return self._insufficient(normalized_topic, execution_error="retrieval_failed")
         if len(chunks) < 2:
             return self._insufficient(normalized_topic)
 
@@ -91,8 +94,10 @@ class ResearchPlanService:
             consume("model_calls")
             raw = self.model.with_structured_output(_PlanDraft).invoke(request)
             draft = _PlanDraft.model_validate(raw)
+        except ExecutionDenied:
+            raise
         except Exception:
-            return self._insufficient(normalized_topic)
+            return self._insufficient(normalized_topic, execution_error="model_failed")
         if not draft.evidence_sufficient:
             return self._insufficient(normalized_topic)
 
@@ -161,9 +166,10 @@ class ResearchPlanService:
         )
 
     @staticmethod
-    def _insufficient(topic: str) -> ResearchPlan:
+    def _insufficient(topic: str, *, execution_error: str | None = None) -> ResearchPlan:
         return ResearchPlan(
             topic=topic,
             evidence_sufficient=False,
             suggested_search_query=f"{topic} water quality remote sensing methods",
+            execution_error=execution_error,
         )

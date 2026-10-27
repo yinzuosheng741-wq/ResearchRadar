@@ -322,7 +322,7 @@ def test_agent_reply_contains_safe_runtime_diagnostics():
     assert diagnostics.skill_id == "evidence_qa"
     assert diagnostics.route_mode == "model"
     assert diagnostics.route_reason == "model_structured_route"
-    assert diagnostics.skill_version == "1.0"
+    assert diagnostics.skill_version == "1.1"
     assert diagnostics.evidence_sufficient is True
     assert diagnostics.retrieval_candidates == 20
     assert diagnostics.evidence_chunks == 5
@@ -352,7 +352,7 @@ def test_agent_diagnostics_mark_router_fallback_and_tolerate_missing_traces():
     assert diagnostics.route_mode == "fallback"
     assert diagnostics.skill_id == "research_plan"
     assert diagnostics.route_reason == "fallback_rule_research_plan"
-    assert diagnostics.skill_version == "1.0"
+    assert diagnostics.skill_version == "1.1"
     assert diagnostics.evidence_sufficient is True
     assert diagnostics.retrieval_candidates == 0
     assert diagnostics.evidence_chunks == 0
