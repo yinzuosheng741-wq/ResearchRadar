@@ -1,10 +1,10 @@
 /* Local desktop shell. Native Streamlit widgets retain their keyboard behavior. */
 :root {
-    --workspace-ink: #202123;
-    --workspace-muted: #77787b;
+    --workspace-ink: #223c50;
+    --workspace-muted: #617487;
     --workspace-line: #e8e8e8;
-    --sm-ink: #202123;
-    --sm-muted: #77787b;
+    --sm-ink: #223c50;
+    --sm-muted: #617487;
     --sm-line: #e8e8e8;
     --sm-green: #377465;
     --sm-mint: #f1f6f3;
@@ -12,7 +12,7 @@
 html, body, input, textarea, button {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-.stApp, [data-testid="stAppViewContainer"] {background: #fff; color: var(--workspace-ink);}
+.stApp, [data-testid="stAppViewContainer"] {background: #fcfdff; color: var(--workspace-ink);}
 [data-testid="stHeader"] {background: transparent;}
 [data-testid="stToolbar"], [data-testid="stDecoration"] {display: none;}
 [data-testid="stSidebar"] {background: #f9f9f9; border-right: 1px solid #ededed;}
@@ -24,7 +24,7 @@ html, body, input, textarea, button {
 .block-container {max-width: 900px !important; padding-top: 1.3rem !important; padding-bottom: 1.5rem;}
 .workspace-topline {font-size: 17px; font-weight: 600; letter-spacing: -.025em; padding: .25rem 0;}
 .workspace-topline span {font-size: 12px; color: var(--workspace-muted); font-weight: 400; margin-left: .6rem;}
-.workspace-context {color: #77787b; font-size: 12px; margin-top: .15rem;}
+.workspace-context {color: #617487; font-size: 12px; margin-top: .15rem;}
 .workspace-context b {font-weight: 500; color: #4a4d50;}
 .workspace-welcome {text-align: center; padding: clamp(2.4rem, 9vh, 5.5rem) 0 2rem;}
 .workspace-orbit {display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: #f0f5f2; color: #377465; margin: 0 auto 1.1rem; font-size: 24px; font-weight: 400;}
@@ -32,8 +32,8 @@ html, body, input, textarea, button {
 .workspace-welcome p {font-size: 14px !important; color: var(--workspace-muted); line-height: 1.8; margin: 0;}
 .workspace-hint {font-size: 11px; color: #8b8c8f; text-align: center; margin: .65rem 0 0;}
 [data-testid="stSidebar"] button {border: 0 !important; background: transparent; color: #37383b; border-radius: 9px; text-align: left; box-shadow: none; font-weight: 400;}
-[data-testid="stSidebar"] button:hover {background: #ededed; color: #202123;}
-[data-testid="stSidebar"] button[kind="primary"] {background: #e8e8e8 !important; color: #202123 !important; font-weight: 500;}
+[data-testid="stSidebar"] button:hover {background: #ededed; color: #223c50;}
+[data-testid="stSidebar"] button[kind="primary"] {background: #e8e8e8 !important; color: #223c50 !important; font-weight: 500;}
 [data-testid="stSidebar"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; font-size: 13px;}
 [data-testid="stSidebar"] [data-testid="stTextInput"] input {background: #f0f0f0; border: 0; border-radius: 9px; font-size: 13px;}
 [data-testid="stSidebar"] [data-testid="stCaptionContainer"] {font-size: 11px;}
@@ -45,20 +45,20 @@ html, body, input, textarea, button {
 [data-testid="stSidebar"] [data-testid="stRadio"] label p {font-size: 13px;}
 .st-key-stylemate_desktop_chat, .st-key-stylemate_desktop_history {background: transparent; border: 0; padding: 0;}
 [data-testid="stChatMessage"] {background: transparent !important; border: 0 !important; border-radius: 0; padding: 1.35rem 0 !important; gap: 0; line-height: 1.85;}
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {background: #f4f4f4 !important; border-radius: 20px !important; padding: .7rem 1.1rem !important; width: fit-content; max-width: 88%; margin-left: auto; margin-bottom: .5rem;}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {background: #eaf2f8 !important; border-radius: 20px !important; padding: .7rem 1.1rem !important; width: fit-content; max-width: 88%; margin-left: auto; margin-bottom: .5rem;}
 [data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"] {display: none;}
 [data-testid="stChatMessageContent"] {min-width: 0; overflow-wrap: anywhere;}
 [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li {font-size: 15px; line-height: 1.85;}
 [data-testid="stChatMessage"] table {display: block; max-width: 100%; overflow-x: auto;}
-[data-testid="stBottom"] {background: #fff;}
+[data-testid="stBottom"] {background: #fcfdff;}
 [data-testid="stBottom"] .block-container {padding-top: .8rem !important; padding-bottom: 1rem !important;}
-[data-testid="stChatInput"] {background: #f4f4f4 !important; border: 1px solid #ececec !important; border-radius: 25px !important; box-shadow: 0 4px 24px #00000004; min-height: 60px;}
+[data-testid="stChatInput"] {background: #eaf2f8 !important; border: 1px solid #ececec !important; border-radius: 25px !important; box-shadow: 0 4px 24px #00000004; min-height: 60px;}
 [data-testid="stChatInput"] textarea {font-size: 14px !important; padding: .6rem .4rem;}
 [data-testid="stChatInput"]:focus-within {border-color: #b2b9b6 !important; box-shadow: 0 0 0 2px #f0f3f1;}
 [data-testid="stExpander"] {border: 1px solid var(--workspace-line); border-radius: 12px; background: transparent;}
 [data-testid="stExpander"] summary p {font-size: 13px;}
-[data-testid="stPopover"] button, [data-testid="stDownloadButton"] button {border: 1px solid var(--workspace-line); background: #fff; color: #66686a; border-radius: 10px; font-size: 12px; box-shadow: none;}
-[class*="st-key-workspace_task_"] {border: 1px solid var(--workspace-line); border-radius: 14px; background: #fff; padding: .65rem .85rem; transition: border-color .15s, background .15s;}
+[data-testid="stPopover"] button, [data-testid="stDownloadButton"] button {border: 1px solid var(--workspace-line); background: #fcfdff; color: #66686a; border-radius: 10px; font-size: 12px; box-shadow: none;}
+[class*="st-key-workspace_task_"] {border: 1px solid var(--workspace-line); border-radius: 14px; background: #fcfdff; padding: .65rem .85rem; transition: border-color .15s, background .15s;}
 [class*="st-key-workspace_task_"]:hover {background: #fafafa; border-color: #cecece;}
 [class*="st-key-workspace_task_"] button {border: 0 !important; background: transparent !important; min-height: 2rem; padding: 0 !important; box-shadow: none !important; color: #323437 !important; font-weight: 550; justify-content: flex-start; text-align: left;}
 [class*="st-key-workspace_task_"] button p {font-size: 14px;}
@@ -66,7 +66,7 @@ html, body, input, textarea, button {
 .st-key-workspace_draft {border: 1px solid #e1e5e2; border-radius: 15px; padding: 1rem; background: #fafcfb; margin-top: .8rem;}
 .st-key-workspace_draft [data-testid="stForm"] {border: 0; padding: 0;}
 .block-container:has(.st-key-workspace_draft) .workspace-welcome {padding: 1rem 0 .8rem;}
-.st-key-workspace_draft button[kind="primary"] {background: #25282a; border-color: #25282a; color: #fff; border-radius: 9px;}
+.st-key-workspace_draft button[kind="primary"] {background: #25282a; border-color: #25282a; color: #fcfdff; border-radius: 9px;}
 [class*="st-key-stylemate_outfit_"] {border: 1px solid var(--workspace-line) !important; border-radius: 16px !important; box-shadow: none !important; padding: 1rem;}
 .stylemate-reason {background: #f7f8f7; color: #626962; border-radius: 10px;}
 .stylemate-piece-name {color: #7a7d7b; font-size: 11px;}
@@ -99,3 +99,87 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {outline: 2px 
 
 [data-testid="stSidebar"] button {min-width: 0; max-width: 100%; overflow: hidden; justify-content: flex-start;}
 [data-testid="stSidebar"] button > div, [data-testid="stSidebar"] button [data-testid="stMarkdownContainer"] {min-width: 0; max-width: 100%; overflow: hidden;}
+
+:root {--identity-accent:#286789;--identity-surface:#edf3f7;--identity-hover:#dfeaf1;--identity-focus:#4d92b4;}
+
+/* Surface-led controls: remove duplicated widget outlines, keep visible keyboard focus. */
+.workspace-brand-mark {background: transparent; color: var(--identity-accent); width:36px; height:36px; flex:0 0 36px;}
+.workspace-brand-mark svg {width:34px;height:34px;}
+[data-testid="stButton"] button, [data-testid="stFormSubmitButton"] button, [data-testid="stPopover"] button, [data-testid="stDownloadButton"] button {border:0 !important;box-shadow:none !important;}
+button[kind^="secondary"] {background:var(--identity-surface);color:var(--workspace-ink);}
+button[kind^="secondary"]:hover {background:var(--identity-hover);color:var(--workspace-ink);}
+button[kind^="primary"], .st-key-workspace_draft button[kind^="primary"] {background:var(--identity-accent) !important;border:0 !important;color:#fff !important;}
+[data-testid="stPopover"] > button, [data-testid="stDownloadButton"] > button {background:transparent !important;color:var(--workspace-muted);}
+[data-testid="stPopover"] > button:hover, [data-testid="stDownloadButton"] > button:hover {background:var(--identity-surface) !important;}
+[data-baseweb="input"], [data-baseweb="textarea"], [data-baseweb="select"] > div {background:var(--identity-surface) !important;border:0 !important;box-shadow:none !important;}
+[data-baseweb="input"] input, [data-baseweb="textarea"] textarea {background:transparent !important;border:0 !important;color:var(--workspace-ink);}
+[data-baseweb="input"]:focus-within, [data-baseweb="textarea"]:focus-within, [data-baseweb="select"]:focus-within {outline:2px solid var(--identity-focus);outline-offset:2px;}
+[data-testid="stExpander"], [data-testid="stExpander"] details {border:0 !important;box-shadow:none !important;background:transparent;}
+[data-testid="stExpander"] summary {color:var(--workspace-muted);padding:.6rem .3rem;}
+[data-testid="stExpander"] summary:hover {background:var(--identity-surface);border-radius:9px;}
+[data-testid="stForm"], .st-key-workspace_draft {border:0 !important;box-shadow:none !important;}
+.st-key-workspace_draft {background:var(--identity-surface);}
+[data-testid="stChatInput"], [data-testid="stChatInput"] > div {border:0 !important;box-shadow:none !important;}
+[data-testid="stChatInput"] {background:var(--identity-surface) !important;}
+[data-testid="stChatInput"]:focus-within {outline:2px solid var(--identity-focus);outline-offset:3px;}
+[data-testid="stChatInputSubmitButton"] {background:var(--identity-accent);}
+[data-testid="stChatInputSubmitButton"]:disabled {background:var(--identity-hover);color:var(--workspace-muted);}
+[class*="st-key-workspace_task_"], [class*="st-key-stylemate_outfit_"], [class*="st-key-garment_card_"] {border:0 !important;box-shadow:none !important;}
+[class*="st-key-workspace_task_"] button:hover {background:var(--identity-hover) !important;}
+button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {outline:2px solid var(--identity-focus) !important;outline-offset:3px;}
+
+/* ResearchRadar / ink navigation and an evidence-led reading workspace. */
+[data-testid="stSidebar"] {background:#192c3a !important;border:0 !important;}
+[data-testid="stSidebar"] p,[data-testid="stSidebar"] label,.workspace-brand-name {color:#e0eaf1;}
+[data-testid="stSidebar"] .workspace-brand-mark {color:#8ac4dc;}
+[data-testid="stSidebar"] .workspace-brand-note,[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {color:#a5bac9 !important;}
+[data-testid="stSidebar"] button {color:#e0eaf1 !important;background:transparent !important;border-radius:6px !important;}
+[data-testid="stSidebar"] button:hover,[data-testid="stSidebar"] button[kind="primary"] {background:#284454 !important;color:#e0eaf1 !important;}
+[data-testid="stSidebar"] [data-baseweb="input"],[data-testid="stSidebar"] [data-baseweb="select"] > div {background:#284454 !important;}
+[data-testid="stSidebar"] input,[data-testid="stSidebar"] [data-baseweb="select"] div,[data-testid="stSidebar"] [data-baseweb="select"] svg {color:#e0eaf1 !important;}
+[data-testid="stSidebar"] input::placeholder {color:#a5bac9;opacity:1;}
+[data-testid="stSidebar"] hr {border-color:#2c4455;}
+[data-testid="stSidebar"] [data-testid="stExpander"] summary {color:#dce8f2;}
+[data-testid="stSidebar"] [data-testid="stExpander"] summary:hover {background:#284454;}
+.workspace-welcome {text-align:left;padding:1.35rem 0 .65rem;}
+.research-masthead {display:flex;align-items:center;gap:.65rem;margin-bottom:1rem;color:#286789;}
+.research-masthead svg {width:35px;height:35px;flex:0 0 35px;}
+.research-masthead span {font-family:Consolas,"SFMono-Regular",monospace;font-size:10px;letter-spacing:.07em;}
+.workspace-welcome-title {font-size:clamp(27px,3vw,33px) !important;font-weight:650;line-height:1.4;letter-spacing:-.035em;color:#223c50;margin-bottom:.6rem;}
+.workspace-welcome p {color:#617487;}
+.research-principles {display:flex;gap:1.4rem;margin-top:1rem;font-size:11px;color:#617487;}
+.research-principles span::before {content:"·";color:#286789;margin-right:.4rem;}
+[class*="st-key-workspace_task_"] {background:transparent;padding:.15rem .45rem .25rem;border-radius:8px;}
+[class*="st-key-workspace_task_"] [data-testid="stVerticalBlock"] {gap:.05rem;}
+[class*="st-key-workspace_task_"] button {border-radius:6px;padding:.25rem .45rem;color:#223c50 !important;}
+[class*="st-key-workspace_task_"] button p {font-size:15px;}
+[class*="st-key-workspace_task_"] [data-testid="stCaptionContainer"] {padding-left:2rem;color:#617487;}
+.workspace-hint {text-align:left;padding-left:.9rem;color:#617487;margin-top:.25rem;}
+[data-testid="stChatInput"],[data-testid="stChatInput"] > div {border-radius:14px !important;}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {border-radius:10px !important;}
+.st-key-workspace_draft {border-radius:10px;}
+.st-key-research_scope_status {padding:.1rem 0 .2rem;}
+.st-key-research_scope_status [data-testid="stCaptionContainer"] {font-family:Consolas,"Microsoft YaHei",monospace;font-size:11px;}
+[data-testid="stChatMessage"] [data-testid="stExpander"] summary {color:#286789;}
+
+/* React Aria controls in newer Streamlit versions; BaseWeb rules above support older builds. */
+[data-testid="stTextInputRootElement"],[data-testid="stTextAreaRootElement"],[data-testid="stSelectbox"] [role="group"] {border:0 !important;box-shadow:none !important;background:var(--identity-surface) !important;border-radius:10px;}
+[data-testid="stTextInput"] input,[data-testid="stTextArea"] textarea,[data-testid="stSelectbox"] input {background:transparent !important;border:0 !important;}
+[data-testid="stTextInputRootElement"]:focus-within,[data-testid="stTextAreaRootElement"]:focus-within,[data-testid="stSelectbox"] [role="group"]:focus-within {outline:2px solid var(--identity-focus);outline-offset:2px;}
+[data-testid="stPopover"] button[data-testid],button[data-testid="stPopoverButton"] {border:0 !important;box-shadow:none !important;background:transparent !important;}
+[class*="st-key-workspace_task_"][data-testid="stVerticalBlock"] {gap:.2rem !important;}
+[class*="st-key-workspace_task_"] button > div,[class*="st-key-workspace_task_"] button span[data-has-shortcut] {width:100%;justify-content:flex-start !important;}
+[class*="st-key-workspace_task_"] button p {text-align:left;}
+[data-testid="stChatInput"] {overflow:hidden;}
+
+[data-testid="stSidebar"] [data-testid="stTextInputRootElement"],[data-testid="stSidebar"] [data-testid="stSelectbox"] [role="group"] {background:#284454 !important;}
+[data-testid="stSidebar"] [data-testid="stTextInput"] input,[data-testid="stSidebar"] [data-testid="stSelectbox"] input {background:transparent !important;color:#e0eaf1 !important;}
+.block-container > [data-testid="stVerticalBlock"] {gap:.65rem;}
+.workspace-welcome {padding:1rem 0 .4rem;}
+.research-masthead {margin-bottom:.6rem;}
+.research-principles {margin-top:.6rem;}
+[class*="st-key-workspace_task_"][data-testid="stVerticalBlock"] {gap:.1rem !important;}
+
+[class*="st-key-workspace_task_"] [data-testid="stCaptionContainer"] p {color:#617487 !important;}
+
+[class*="st-key-workspace_task_"] [data-testid="stCaptionContainer"] {opacity:1;}

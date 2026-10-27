@@ -130,10 +130,11 @@ def _snapshot(services: UiServices) -> dict[str, Any]:
 
 def render_sidebar(st, *, compact: bool = False) -> str:
     if compact:
+        from web.identity import RADAR_MARK
         target = st.session_state.pop("research_navigation_target", None)
         if target:
             st.session_state["research_workbench_module"] = target
-        st.sidebar.markdown("<div class='workspace-brand'><div class='workspace-brand-mark'>R</div>"
+        st.sidebar.markdown(f"<div class='workspace-brand'><div class='workspace-brand-mark'>{RADAR_MARK}</div>"
                             "<div class='workspace-brand-name'>ResearchRadar<span class='workspace-brand-note'>让研究有据可循</span></div></div>",
                             unsafe_allow_html=True)
         labels = [label for _group, label in WORKBENCH_NAV_ITEMS]
@@ -625,6 +626,7 @@ def render_research_agent_page(st, services: UiServices) -> None:
     from domain.models import ResearchConversationMessage
     from web.chat_actions import conversation_export, render_task_draft, start_task_draft
     from web.evidence_panel import render_evidence_panel
+    from web.identity import RADAR_MARK
 
     conversation = ResearchConversationState.model_validate(
         st.session_state.get(_RESEARCH_AGENT_STATE_KEY) or {}
@@ -681,9 +683,11 @@ def render_research_agent_page(st, services: UiServices) -> None:
     if not transcript:
         with st.container(key="research_welcome"):
             st.markdown(
-                "<div class='workspace-welcome'><div class='workspace-orbit'>⌁</div>"
-                "<div class='workspace-welcome-title'>从一个研究问题开始</div>"
-                "<p>把论文连成线索，让下一步研究更清楚。</p></div>",
+                f"<div class='workspace-welcome'><div class='research-masthead'>{RADAR_MARK}"
+                "<span>RESEARCHRADAR / EVIDENCE WORKSPACE</span></div>"
+                "<div class='workspace-welcome-title'>让研究判断，有据可循。</div>"
+                "<p>从一个问题出发，查找依据、对照方法、厘清证据缺口。</p>"
+                "<div class='research-principles'><span>原文回查</span><span>范围可控</span><span>证据优先</span></div></div>",
                 unsafe_allow_html=True,
             )
         prompts = [("evidence", "查找论文证据", "哪些本地论文研究了 Sentinel-2 叶绿素 a 反演？请给出证据。"),
@@ -691,12 +695,12 @@ def render_research_agent_page(st, services: UiServices) -> None:
                    ("plan", "规划研究路线", "我想用 Sentinel-2 研究湖泊叶绿素 a 预测，应该从哪里开始？")]
         descriptions = ["定位原文，区分摘要与全文", "对照条件，找出可比与不可比项", "整理研究方向与证据缺口"]
         if not st.session_state.get("research_task_draft"):
-            for column, (key, label, value), description in zip(st.columns(3), prompts, descriptions):
-                with column:
-                    with st.container(key=f"workspace_task_{key}"):
-                        st.button(label, key=f"research_prompt_{key}", use_container_width=True,
-                                  on_click=start_task_draft, args=(st.session_state, value))
-                        st.caption(description)
+            task_icons = [":material/manage_search:", ":material/compare_arrows:", ":material/route:"]
+            for (key, label, value), description, icon in zip(prompts, descriptions, task_icons):
+                with st.container(key=f"workspace_task_{key}"):
+                    st.button(label, key=f"research_prompt_{key}", use_container_width=True, icon=icon,
+                              on_click=start_task_draft, args=(st.session_state, value))
+                    st.caption(description)
             st.markdown("<div class='workspace-hint'>选择任务可先编辑问题，也可以直接在下方输入</div>", unsafe_allow_html=True)
     selected_prompt = render_task_draft(st)
     tool_labels = {
