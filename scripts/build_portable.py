@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -12,18 +13,33 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def selected_files(root: Path):
+    visible_files = None
+    if (root / ".git").exists():
+        try:
+            output = subprocess.check_output(
+                ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"], cwd=root,
+            )
+        except (OSError, subprocess.CalledProcessError) as exc:
+            raise ValueError("git_file_inventory_required") from exc
+        visible_files = {name.decode("utf-8") for name in output.split(b"\0") if name}
+
+    def eligible(path):
+        return visible_files is None or path.relative_to(root).as_posix() in visible_files
+
     common = {"desktop.py", "Start.cmd", "README.md", ".env.example", "requirements.txt",
               "requirements-portable.txt", "portable-lock.txt", "app.py", "pyproject.toml"}
     directories = (["stylemate", "assets/demo", "data/knowledge", "docs", ".streamlit"]
                    if (root / "stylemate").is_dir() else
                    ["agent", "config", "domain", "evaluation", "ingestion", "model", "prompts", "providers",
                     "rag", "retrieval", "storage", "tools", "utils", "web", "workflows", "data/evaluation", "docs"])
+    if (root / "stylemate").is_dir():
+        directories.append("evaluation")
     for name in sorted(common):
-        if (root / name).is_file():
+        if (root / name).is_file() and eligible(root / name):
             yield root / name
     for directory in directories:
         for path in sorted((root / directory).rglob("*")):
-            if not path.is_file() or path.is_symlink():
+            if not path.is_file() or path.is_symlink() or not eligible(path):
                 continue
             parts = path.relative_to(root).parts
             if any(part.startswith(".") and part != ".streamlit" for part in parts):
@@ -33,9 +49,18 @@ def selected_files(root: Path):
             if path.name.startswith(".env") or path.name == "secrets.toml":
                 continue
             yield path
-    for name in ("evaluation.json", "agent_evaluation.json"):
+    reports = {"evaluation.json", "agent_evaluation.json", "agent_evaluation_20261022_round2.json"}
+    manifest_path = root / "artifacts/evaluation_manifest.json"
+    if manifest_path.is_file():
+        try:
+            active = json.loads(manifest_path.read_text("utf-8"))["report"]
+            if isinstance(active, str) and Path(active).name == active and active.endswith(".json"):
+                reports.update({"evaluation_manifest.json", active})
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+    for name in sorted(reports):
         path = root / "artifacts" / name
-        if path.is_file():
+        if path.is_file() and eligible(path):
             yield path
 
 

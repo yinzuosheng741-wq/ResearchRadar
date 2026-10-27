@@ -14,7 +14,7 @@ def reset_chat(st, conversation_id=None):
     st.session_state["research_chat_id"] = conversation_id or uuid4().hex
     st.session_state["research_navigation_target"] = "科研助手"
     for key in (STATE_KEY, TRANSCRIPT_KEY, "research_agent_pending_search",
-                "research_paper_scope", "research_scope_mode"):
+                "research_paper_scope", "research_scope_mode", "research_scope_request", "research_delete_requested"):
         st.session_state.pop(key, None)
 
 
@@ -49,6 +49,11 @@ def render_workspace(st):
 
 
 def render_memory(st, services, conversation):
+    pending_scope = st.session_state.pop("research_scope_request", None)
+    if pending_scope is not None:
+        known = {paper["paper_id"] for paper in services.knowledge_snapshot().get("papers", [])}
+        st.session_state["research_scope_mode"] = "仅选定论文"
+        st.session_state["research_paper_scope"] = [key for key in pending_scope if key in known]
     with st.expander("记忆与检索范围", expanded=False):
         st.caption("对话记忆只用于理解问题；论文范围由你选择。新对话不会自动继承本次论文选择。")
         mode = st.radio("本次检索范围", ["全部可用论文", "仅选定论文"], horizontal=True,
@@ -86,10 +91,18 @@ def inject_chat_style(st):
     [data-testid="stToolbar"] {display:none;}
     [data-testid="stDecoration"] {display:none;}
     .block-container {max-width:1000px;padding-top:2rem;padding-bottom:6rem;}
-    [data-testid="stChatMessage"] {border:0!important;border-radius:18px!important;background:#fafafa;line-height:1.8;}
+    [data-testid="stChatMessage"] {border:0!important;border-radius:18px!important;background:transparent;line-height:1.8;padding:1.25rem .75rem;}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {background:#f4f4f5;margin-left:8%;}
     [data-testid="stChatInput"] {border-radius:24px!important;border:1px solid #dedede;box-shadow:0 3px 18px #00000008;}
     .agent-welcome {border:0;background:transparent;text-align:center;padding:3rem 1rem;}
-    .agent-welcome-title {font-size:1.9rem;color:#252525;}
+    .agent-welcome-title {font-size:2.2rem;font-weight:650;letter-spacing:-.04em;color:#18181b;}
+    .agent-welcome-copy {margin:.8rem 0;color:#71717a;font-size:1rem;}
+    .block-container h1 {font-size:1.7rem;line-height:1.3;}
+    .block-container:has(.agent-welcome) {padding-bottom:2rem;}
+    .agent-welcome {padding:2rem 1rem;}
+    [data-testid="stSidebar"] button {border:0;border-radius:10px;text-align:left;}
+    [data-testid="stExpander"] {border-color:#e9e9ec;border-radius:12px;}
+    [data-testid="stDownloadButton"] button {border:0;background:transparent;color:#52525b;font-size:.82rem;}
     .agent-suggestion {border-radius:14px;background:#f3f4f6;color:#48515c;}
     @media(max-width:700px){.block-container{padding-left:1rem;padding-right:1rem;}}
     </style>""", unsafe_allow_html=True)

@@ -49,3 +49,21 @@ def test_explicit_empty_paper_selection_does_not_widen_scope(tmp_path, monkeypat
     assert not app.exception
     assert app.multiselect(key="research_paper_scope").value == []
     assert app.session_state["received_paper_scope"] == ()
+
+
+def test_clear_keeps_history_until_explicit_confirmation_and_cancel_is_safe(tmp_path, monkeypatch):
+    monkeypatch.setenv("RESEARCH_CHAT_DB", str(tmp_path / "chats.sqlite3"))
+    entry = tmp_path / "offline_app.py"
+    entry.write_text(APP, encoding="utf-8")
+    app = AppTest.from_file(str(entry)).run(timeout=20)
+    first_id = app.session_state["research_chat_id"]
+    app.chat_input(key="research_agent_input").set_value("你好").run(timeout=20)
+    app.button(key="clear_research_agent").click().run(timeout=20)
+    assert len(app.session_state["research_chat_transcript"]) == 2
+    app.button(key="research_cancel_delete").click().run(timeout=20)
+    assert len(app.session_state["research_chat_transcript"]) == 2
+    app.button(key="clear_research_agent").click().run(timeout=20)
+    app.button(key="research_confirm_delete").click().run(timeout=20)
+    assert not app.exception
+    assert app.session_state["research_chat_id"] != first_id
+    assert app.session_state["research_chat_transcript"] == []

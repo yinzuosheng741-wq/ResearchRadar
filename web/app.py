@@ -626,16 +626,34 @@ def render_research_agent_page(st, services: UiServices) -> None:
     controls = st.columns([1, 4])
     with controls[0]:
         if st.button("清空对话", key="clear_research_agent"):
+            st.session_state["research_delete_requested"] = st.session_state.get("research_chat_id", "session")
+    current_id = st.session_state.get("research_chat_id", "session")
+    if st.session_state.get("research_delete_requested") == current_id:
+        st.warning("确认删除当前对话及其历史记录？新建对话可保留这些记录；删除后无法从界面恢复。")
+        confirm, cancel = st.columns(2)
+        if confirm.button("确认删除当前对话", key="research_confirm_delete"):
             if "research_chat_store" in st.session_state:
-                st.session_state["research_chat_store"].delete(st.session_state["research_chat_id"])
-                st.session_state.pop("research_chat_transcript", None)
-            st.session_state.pop(_RESEARCH_AGENT_STATE_KEY, None)
-            st.session_state.pop(_RESEARCH_AGENT_SEARCH_KEY, None)
+                st.session_state["research_chat_store"].delete(current_id)
+                from web.chat_workspace import reset_chat
+                reset_chat(st)
+            else:
+                st.session_state.pop(_RESEARCH_AGENT_STATE_KEY, None)
+                st.session_state.pop(_RESEARCH_AGENT_SEARCH_KEY, None)
+            st.session_state.pop("research_delete_requested", None)
+            st.rerun()
+        if cancel.button("保留对话", key="research_cancel_delete"):
+            st.session_state.pop("research_delete_requested", None)
             st.rerun()
 
     conversation = ResearchConversationState.model_validate(
         st.session_state.get(_RESEARCH_AGENT_STATE_KEY) or {}
     )
+    from domain.models import ResearchConversationMessage
+    from web.evidence_panel import render_evidence_panel
+
+    transcript = [ResearchConversationMessage.model_validate(m) for m in
+                  st.session_state.get("research_chat_transcript", [])] or conversation.messages
+    selected_prompt = None
     if "research_chat_store" in st.session_state:
         from web.chat_workspace import render_memory
         render_memory(st, services, conversation)
@@ -647,31 +665,33 @@ def render_research_agent_page(st, services: UiServices) -> None:
                 if value
             }
             st.json(scope)
-    if not conversation.messages:
+    if not transcript:
         st.markdown(
             "<div class='agent-welcome'><div class='agent-welcome-title'>从一个研究问题开始</div>"
-            "<div class='agent-welcome-copy'>Agent 会先判断任务，再调用证据问答或研究路线技能。</div>"
-            "<div class='agent-suggestion'>例如：我想用 Sentinel-2 研究湖泊叶绿素 a 预测，应该从哪里开始？</div></div>",
+            "<div class='agent-welcome-copy'>查找论文依据，比较研究方法，整理下一步研究思路。</div></div>",
             unsafe_allow_html=True,
         )
+        prompts = [("evidence", "查找论文证据", "哪些本地论文研究了 Sentinel-2 叶绿素 a 反演？请给出证据。"),
+                   ("comparison", "比较研究方法", "比较本地论文的水质反演方法，并区分实验条件与不可比项。"),
+                   ("plan", "规划研究路线", "我想用 Sentinel-2 研究湖泊叶绿素 a 预测，应该从哪里开始？")]
+        for column, (key, label, value) in zip(st.columns(3), prompts):
+            if column.button(label, key=f"research_prompt_{key}", use_container_width=True):
+                selected_prompt = value
     tool_labels = {
         "evidence_qa": "证据问答",
         "research_plan": "研究路线",
         "general_chat": "普通对话（未调用本地知识库）",
     }
-    from domain.models import ResearchConversationMessage
-    transcript = [ResearchConversationMessage.model_validate(m) for m in
-                  st.session_state.get("research_chat_transcript", [])] or conversation.messages
-    for message in transcript:
+    for index, message in enumerate(transcript):
         with st.chat_message(message.role):
             st.markdown(escape_untrusted(message.content))
             if message.tool_name:
-                st.caption(f"Agent 工具：{tool_labels.get(message.tool_name, message.tool_name)}")
+                st.caption(f"回答方式：{tool_labels.get(message.tool_name, message.tool_name)}")
             if message.diagnostics is not None:
                 with st.expander("运行诊断", expanded=False):
                     st.markdown(render_agent_diagnostics(message.diagnostics))
-            for citation in message.citations:
-                st.markdown(render_citation(citation))
+            if message.role == "assistant":
+                render_evidence_panel(st, message, index)
 
     pending_query = st.session_state.get(_RESEARCH_AGENT_SEARCH_KEY)
     if isinstance(pending_query, str) and pending_query:
@@ -685,7 +705,7 @@ def render_research_agent_page(st, services: UiServices) -> None:
             except Exception:
                 _safe_error(st, "ui_search_failed")
 
-    prompt = st.chat_input("输入科研问题", key="research_agent_input")
+    prompt = st.chat_input("输入科研问题，也可以指定要核对的论文和实验条件", key="research_agent_input") or selected_prompt
     if not prompt:
         return
     # Render the submitted question before the model/tool call so the chat feels immediate.
