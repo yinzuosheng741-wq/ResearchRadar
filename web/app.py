@@ -133,7 +133,9 @@ def render_sidebar(st, *, compact: bool = False) -> str:
         target = st.session_state.pop("research_navigation_target", None)
         if target:
             st.session_state["research_workbench_module"] = target
-        st.sidebar.markdown("### ResearchRadar")
+        st.sidebar.markdown("<div class='workspace-brand'><div class='workspace-brand-mark'>R</div>"
+                            "<div class='workspace-brand-name'>ResearchRadar<span class='workspace-brand-note'>让研究有据可循</span></div></div>",
+                            unsafe_allow_html=True)
         labels = [label for _group, label in WORKBENCH_NAV_ITEMS]
         return st.sidebar.selectbox("工作区", labels, key="research_workbench_module")
     grouped: dict[str, list[str]] = {}
@@ -620,11 +622,23 @@ def render_qa_page(st, services: UiServices) -> None:
 
 def render_research_agent_page(st, services: UiServices) -> None:
     from domain.models import ResearchConversationState
+    from domain.models import ResearchConversationMessage
+    from web.chat_actions import conversation_export, render_task_draft, start_task_draft
+    from web.evidence_panel import render_evidence_panel
 
-    st.title("ResearchRadar")
-    st.caption("基于本地论文知识库的证据化研究助手")
-    controls = st.columns([1, 4])
-    with controls[0]:
+    conversation = ResearchConversationState.model_validate(
+        st.session_state.get(_RESEARCH_AGENT_STATE_KEY) or {}
+    )
+    transcript = [ResearchConversationMessage.model_validate(m) for m in
+                  st.session_state.get("research_chat_transcript", [])] or conversation.messages
+    with st.container(key="workspace_toolbar"):
+        title, action = st.columns([5, 1.3])
+        title.markdown("<div class='workspace-topline'>ResearchRadar <span>研究对话</span></div>", unsafe_allow_html=True)
+    with action.popover("选项", icon=":material/more_horiz:", use_container_width=True):
+        st.download_button("导出完整对话", conversation_export(transcript), file_name="research-conversation.md",
+                           mime="text/markdown", key="research_export_conversation", disabled=not bool(transcript))
+        st.caption("包含当前对话的可阅读历史和引用，敏感路径等内容会隐藏。")
+        st.divider()
         if st.button("清空对话", key="clear_research_agent"):
             st.session_state["research_delete_requested"] = st.session_state.get("research_chat_id", "session")
     current_id = st.session_state.get("research_chat_id", "session")
@@ -645,18 +659,17 @@ def render_research_agent_page(st, services: UiServices) -> None:
             st.session_state.pop("research_delete_requested", None)
             st.rerun()
 
-    conversation = ResearchConversationState.model_validate(
-        st.session_state.get(_RESEARCH_AGENT_STATE_KEY) or {}
-    )
-    from domain.models import ResearchConversationMessage
-    from web.evidence_panel import render_evidence_panel
-
-    transcript = [ResearchConversationMessage.model_validate(m) for m in
-                  st.session_state.get("research_chat_transcript", [])] or conversation.messages
     selected_prompt = None
     if "research_chat_store" in st.session_state:
         from web.chat_workspace import render_memory
         render_memory(st, services, conversation)
+    with st.container(key="research_scope_status"):
+        selected = st.session_state.get("research_scope_mode") == "仅选定论文"
+        count = len(st.session_state.get("research_paper_scope", []))
+        scope_label = f"仅选定 {count} 篇论文" if selected else "全部可用论文"
+        st.caption(f"检索范围：{scope_label} · 回答后可展开引用核对")
+        if selected and not count:
+            st.warning("尚未选择论文，当前不会检索证据。请在“研究范围与记忆”中选择论文。")
     if conversation.scope != type(conversation.scope)():
         with st.expander("当前研究范围"):
             scope = {
@@ -666,17 +679,26 @@ def render_research_agent_page(st, services: UiServices) -> None:
             }
             st.json(scope)
     if not transcript:
-        st.markdown(
-            "<div class='agent-welcome'><div class='agent-welcome-title'>从一个研究问题开始</div>"
-            "<div class='agent-welcome-copy'>查找论文依据，比较研究方法，整理下一步研究思路。</div></div>",
-            unsafe_allow_html=True,
-        )
+        with st.container(key="research_welcome"):
+            st.markdown(
+                "<div class='workspace-welcome'><div class='workspace-orbit'>⌁</div>"
+                "<div class='workspace-welcome-title'>从一个研究问题开始</div>"
+                "<p>把论文连成线索，让下一步研究更清楚。</p></div>",
+                unsafe_allow_html=True,
+            )
         prompts = [("evidence", "查找论文证据", "哪些本地论文研究了 Sentinel-2 叶绿素 a 反演？请给出证据。"),
                    ("comparison", "比较研究方法", "比较本地论文的水质反演方法，并区分实验条件与不可比项。"),
                    ("plan", "规划研究路线", "我想用 Sentinel-2 研究湖泊叶绿素 a 预测，应该从哪里开始？")]
-        for column, (key, label, value) in zip(st.columns(3), prompts):
-            if column.button(label, key=f"research_prompt_{key}", use_container_width=True):
-                selected_prompt = value
+        descriptions = ["定位原文，区分摘要与全文", "对照条件，找出可比与不可比项", "整理研究方向与证据缺口"]
+        if not st.session_state.get("research_task_draft"):
+            for column, (key, label, value), description in zip(st.columns(3), prompts, descriptions):
+                with column:
+                    with st.container(key=f"workspace_task_{key}"):
+                        st.button(label, key=f"research_prompt_{key}", use_container_width=True,
+                                  on_click=start_task_draft, args=(st.session_state, value))
+                        st.caption(description)
+            st.markdown("<div class='workspace-hint'>选择任务可先编辑问题，也可以直接在下方输入</div>", unsafe_allow_html=True)
+    selected_prompt = render_task_draft(st)
     tool_labels = {
         "evidence_qa": "证据问答",
         "research_plan": "研究路线",
@@ -705,7 +727,8 @@ def render_research_agent_page(st, services: UiServices) -> None:
             except Exception:
                 _safe_error(st, "ui_search_failed")
 
-    prompt = st.chat_input("输入科研问题，也可以指定要核对的论文和实验条件", key="research_agent_input") or selected_prompt
+    prompt = st.chat_input("输入科研问题，也可以指定要核对的论文和实验条件", key="research_agent_input",
+                           max_chars=4000, disabled=bool(st.session_state.get("research_task_draft"))) or selected_prompt
     if not prompt:
         return
     # Render the submitted question before the model/tool call so the chat feels immediate.
@@ -719,8 +742,11 @@ def render_research_agent_page(st, services: UiServices) -> None:
                     paper_ids=tuple(st.session_state.get("research_paper_scope", []))))
             else:
                 turn = services.research_chat(prompt, conversation)
-    except ValueError:
-        _safe_error(st, "ui_agent_message_invalid")
+    except ValueError as exc:
+        if str(exc) == "research_model_not_configured":
+            st.info("尚未配置对话模型，本轮没有执行论文检索。请在本机配置 OPENAI_API_KEY 后重新发送；当前仍可浏览文献和历史对话。")
+        else:
+            _safe_error(st, "ui_agent_message_invalid")
         return
     except Exception as exc:
         code = _agent_error_code(exc)
@@ -736,6 +762,7 @@ def render_research_agent_page(st, services: UiServices) -> None:
         st.session_state[_RESEARCH_AGENT_SEARCH_KEY] = turn.reply.suggested_search_query
     else:
         st.session_state.pop(_RESEARCH_AGENT_SEARCH_KEY, None)
+    st.session_state.pop("research_task_draft", None)
     st.rerun()
 
 

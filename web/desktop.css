@@ -1,0 +1,101 @@
+/* Local desktop shell. Native Streamlit widgets retain their keyboard behavior. */
+:root {
+    --workspace-ink: #202123;
+    --workspace-muted: #77787b;
+    --workspace-line: #e8e8e8;
+    --sm-ink: #202123;
+    --sm-muted: #77787b;
+    --sm-line: #e8e8e8;
+    --sm-green: #377465;
+    --sm-mint: #f1f6f3;
+}
+html, body, input, textarea, button {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.stApp, [data-testid="stAppViewContainer"] {background: #fff; color: var(--workspace-ink);}
+[data-testid="stHeader"] {background: transparent;}
+[data-testid="stToolbar"], [data-testid="stDecoration"] {display: none;}
+[data-testid="stSidebar"] {background: #f9f9f9; border-right: 1px solid #ededed;}
+[data-testid="stSidebarUserContent"] {padding: 1.25rem 1rem;}
+.workspace-brand {display: flex; align-items: center; gap: .65rem; margin: .2rem 0 1.4rem;}
+.workspace-brand-mark {display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: #242629; color: white; font-size: 15px; font-weight: 650;}
+.workspace-brand-name {font-size: 16px; font-weight: 650; letter-spacing: -.025em;}
+.workspace-brand-note {display: block; font-size: 11px; font-weight: 400; color: var(--workspace-muted); letter-spacing: .02em; margin-top: 1px;}
+.block-container {max-width: 900px !important; padding-top: 1.3rem !important; padding-bottom: 1.5rem;}
+.workspace-topline {font-size: 17px; font-weight: 600; letter-spacing: -.025em; padding: .25rem 0;}
+.workspace-topline span {font-size: 12px; color: var(--workspace-muted); font-weight: 400; margin-left: .6rem;}
+.workspace-context {color: #77787b; font-size: 12px; margin-top: .15rem;}
+.workspace-context b {font-weight: 500; color: #4a4d50;}
+.workspace-welcome {text-align: center; padding: clamp(2.4rem, 9vh, 5.5rem) 0 2rem;}
+.workspace-orbit {display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: #f0f5f2; color: #377465; margin: 0 auto 1.1rem; font-size: 24px; font-weight: 400;}
+.workspace-welcome h2, .workspace-welcome-title {font-size: clamp(27px, 3vw, 34px) !important; font-weight: 600 !important; line-height: 1.35 !important; letter-spacing: -.045em !important; color: #242629 !important; margin: 0 0 .7rem !important; padding: 0 !important;}
+.workspace-welcome p {font-size: 14px !important; color: var(--workspace-muted); line-height: 1.8; margin: 0;}
+.workspace-hint {font-size: 11px; color: #8b8c8f; text-align: center; margin: .65rem 0 0;}
+[data-testid="stSidebar"] button {border: 0 !important; background: transparent; color: #37383b; border-radius: 9px; text-align: left; box-shadow: none; font-weight: 400;}
+[data-testid="stSidebar"] button:hover {background: #ededed; color: #202123;}
+[data-testid="stSidebar"] button[kind="primary"] {background: #e8e8e8 !important; color: #202123 !important; font-weight: 500;}
+[data-testid="stSidebar"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; font-size: 13px;}
+[data-testid="stSidebar"] [data-testid="stTextInput"] input {background: #f0f0f0; border: 0; border-radius: 9px; font-size: 13px;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {font-size: 11px;}
+[data-testid="stSidebar"] hr {margin: .8rem 0; border-color: #e9e9e9;}
+[data-testid="stSidebar"] [role="radiogroup"] {gap: .3rem;}
+[data-testid="stSidebar"] [data-testid="stRadio"] label {background: transparent; border: 0; padding: .35rem .5rem; border-radius: 8px;}
+[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {background: #eaeaea;}
+[data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child {display: none;}
+[data-testid="stSidebar"] [data-testid="stRadio"] label p {font-size: 13px;}
+.st-key-stylemate_desktop_chat, .st-key-stylemate_desktop_history {background: transparent; border: 0; padding: 0;}
+[data-testid="stChatMessage"] {background: transparent !important; border: 0 !important; border-radius: 0; padding: 1.35rem 0 !important; gap: 0; line-height: 1.85;}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {background: #f4f4f4 !important; border-radius: 20px !important; padding: .7rem 1.1rem !important; width: fit-content; max-width: 88%; margin-left: auto; margin-bottom: .5rem;}
+[data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"] {display: none;}
+[data-testid="stChatMessageContent"] {min-width: 0; overflow-wrap: anywhere;}
+[data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li {font-size: 15px; line-height: 1.85;}
+[data-testid="stChatMessage"] table {display: block; max-width: 100%; overflow-x: auto;}
+[data-testid="stBottom"] {background: #fff;}
+[data-testid="stBottom"] .block-container {padding-top: .8rem !important; padding-bottom: 1rem !important;}
+[data-testid="stChatInput"] {background: #f4f4f4 !important; border: 1px solid #ececec !important; border-radius: 25px !important; box-shadow: 0 4px 24px #00000004; min-height: 60px;}
+[data-testid="stChatInput"] textarea {font-size: 14px !important; padding: .6rem .4rem;}
+[data-testid="stChatInput"]:focus-within {border-color: #b2b9b6 !important; box-shadow: 0 0 0 2px #f0f3f1;}
+[data-testid="stExpander"] {border: 1px solid var(--workspace-line); border-radius: 12px; background: transparent;}
+[data-testid="stExpander"] summary p {font-size: 13px;}
+[data-testid="stPopover"] button, [data-testid="stDownloadButton"] button {border: 1px solid var(--workspace-line); background: #fff; color: #66686a; border-radius: 10px; font-size: 12px; box-shadow: none;}
+[class*="st-key-workspace_task_"] {border: 1px solid var(--workspace-line); border-radius: 14px; background: #fff; padding: .65rem .85rem; transition: border-color .15s, background .15s;}
+[class*="st-key-workspace_task_"]:hover {background: #fafafa; border-color: #cecece;}
+[class*="st-key-workspace_task_"] button {border: 0 !important; background: transparent !important; min-height: 2rem; padding: 0 !important; box-shadow: none !important; color: #323437 !important; font-weight: 550; justify-content: flex-start; text-align: left;}
+[class*="st-key-workspace_task_"] button p {font-size: 14px;}
+[class*="st-key-workspace_task_"] [data-testid="stCaptionContainer"] {font-size: 12px; line-height: 1.6; color: #888a8c;}
+.st-key-workspace_draft {border: 1px solid #e1e5e2; border-radius: 15px; padding: 1rem; background: #fafcfb; margin-top: .8rem;}
+.st-key-workspace_draft [data-testid="stForm"] {border: 0; padding: 0;}
+.block-container:has(.st-key-workspace_draft) .workspace-welcome {padding: 1rem 0 .8rem;}
+.st-key-workspace_draft button[kind="primary"] {background: #25282a; border-color: #25282a; color: #fff; border-radius: 9px;}
+[class*="st-key-stylemate_outfit_"] {border: 1px solid var(--workspace-line) !important; border-radius: 16px !important; box-shadow: none !important; padding: 1rem;}
+.stylemate-reason {background: #f7f8f7; color: #626962; border-radius: 10px;}
+.stylemate-piece-name {color: #7a7d7b; font-size: 11px;}
+.stylemate-assistant-head {display: none;}
+.st-key-workspace_toolbar [data-testid="stVerticalBlock"] {gap: .25rem;}
+.st-key-research_scope_status {padding: .25rem 0 .7rem;}
+.st-key-research_scope_status button {min-height: 1.7rem; font-size: 12px; border: 0; background: #f3f4f5; border-radius: 20px; padding: .15rem .7rem; color: #616469;}
+.st-key-research_scope_status [data-testid="stCaptionContainer"] {font-size: 12px;}
+.st-key-research_welcome .workspace-orbit {background: #f0f3f9; color: #5d7196;}
+button:focus-visible, input:focus-visible, textarea:focus-visible {outline: 2px solid #6b8b80; outline-offset: 3px;}
+@media (max-width: 700px) {
+    .block-container {padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 1rem !important;}
+    .workspace-welcome {padding-top: 2.5rem;}
+    .workspace-topline span {display: block; margin-left: 0; margin-top: .2rem;}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {max-width: 95%;}
+    [class*="st-key-workspace_task_"] {padding: .5rem .7rem;}
+}
+@media (prefers-reduced-motion: reduce) {*, *::before, *::after {transition: none !important;}}
+
+/* Streamlit 1.40 and newer use different inner composer wrappers. */
+[data-testid="stChatInput"] > div {background: transparent !important; border-radius: 24px !important;}
+[data-testid="stChatInputSubmitButton"] {border-radius: 50%; color: white; background: #292b2d; width: 32px; height: 32px;}
+[data-testid="stChatInputSubmitButton"]:disabled {background: #e4e4e4; color: #a1a1a1;}
+[data-testid="stSidebarHeader"] {height: 32px; min-height: 32px; padding: 0 .5rem !important;}
+[data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"] label {justify-content: flex-start; min-width: 100%;}
+[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) p {color: #292b2d !important;}
+.st-key-workspace_draft button[kind^="primary"] {background: #25282a !important; border-color: #25282a !important; color: white;}
+
+[data-testid="stSidebar"] {width: 260px !important; min-width: 260px !important; max-width: 260px !important;}
+
+[data-testid="stSidebar"] button {min-width: 0; max-width: 100%; overflow: hidden; justify-content: flex-start;}
+[data-testid="stSidebar"] button > div, [data-testid="stSidebar"] button [data-testid="stMarkdownContainer"] {min-width: 0; max-width: 100%; overflow: hidden;}

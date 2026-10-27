@@ -1,8 +1,8 @@
 # 水色遥感预测科研助手
 
-2026-10-27 更新：新增引用证据面板、摘要/全文标记、回答导出和“仅基于这篇继续提问”，整理桌面对话布局。范围动作经过规范目录校验，失效论文不会扩大检索范围。见[证据工作区设计](docs/EVIDENCE_WORKSPACE_20261027.md)。
+2026-10-27 更新：精修桌面侧栏、消息与输入区，任务入口先编辑再发送，支持完整对话导出与可见检索范围；证据服务改为按任务初始化，未配置模型时明确提示并停止加载向量模型。见[桌面交互与依赖设计](docs/DESKTOP_REFINEMENT_20261027.md)。引用导航与范围校验见[证据工作区设计](docs/EVIDENCE_WORKSPACE_20261027.md)。
 
-![ResearchRadar 桌面研究工作区](docs/assets/workspace-20261027.png)
+![ResearchRadar 桌面研究工作区](docs/assets/workspace-refined-20261027.png)
 
 截图为关闭模型服务的本地工作区。桌面启动见[桌面便携版](docs/DESKTOP.md)，语料质量限制见[核心全文试点](docs/CORE_FULLTEXT_PILOT_20261022.md)，历史变更见[分批记录](docs/RELEASE_BATCHES_20261026.md)。
 

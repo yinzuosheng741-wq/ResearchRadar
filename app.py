@@ -239,30 +239,40 @@ class DefaultServices:
         ).answer(question)
 
     def research_chat(self, message, conversation=None, *, execution_context=None):
+        from dotenv import load_dotenv
         from agent.research_agent import ResearchAgentService
         from retrieval.hybrid import HybridRetriever
         from retrieval.keyword_index import KeywordIndex
         from workflows.qa import CitedQaService
         from workflows.research_plan import ResearchPlanService
         from utils.config import load_rag_config
+        from workflows.lazy_research import LazyResearchWorkflow
 
-        database = self._database()
-        vector = self._vector_store(database)
-        config = load_rag_config()
-        retriever = HybridRetriever(
-            KeywordIndex(database), vector,
-            keyword_weight=float(config.get("keyword_weight", 2.0)),
-            vector_weight=float(config.get("vector_weight", 0.5)),
-            rrf_k=int(config.get("rrf_k", 60)),
-            candidate_k=int(config.get("candidate_k", 20)),
-            max_chunks_per_paper=int(config.get("max_chunks_per_paper", 4)),
-            allowed_paper_ids=self._allowed_paper_ids(database),
-        )
+        if not isinstance(message, str) or not message.strip() or len(message) > 4000:
+            raise ValueError("research_agent_message_invalid")
+        load_dotenv()
+        if not any(os.getenv(key, "").strip() for key in ("OPENAI_API_KEY", "OPENAI_ADMIN_KEY")):
+            raise ValueError("research_model_not_configured")
         model = self._model()
-        qa_service = CitedQaService(retriever, model, chunk_store=database)
-        plan_service = ResearchPlanService(
-            retriever, model, chunk_store=database
-        )
+        database = self._database()
+        retrievers = []
+
+        def get_retriever():
+            if not retrievers:
+                config = load_rag_config()
+                retrievers.append(HybridRetriever(
+                    KeywordIndex(database), self._vector_store(database),
+                    keyword_weight=float(config.get("keyword_weight", 2.0)),
+                    vector_weight=float(config.get("vector_weight", 0.5)),
+                    rrf_k=int(config.get("rrf_k", 60)),
+                    candidate_k=int(config.get("candidate_k", 20)),
+                    max_chunks_per_paper=int(config.get("max_chunks_per_paper", 4)),
+                    allowed_paper_ids=self._allowed_paper_ids(database),
+                ))
+            return retrievers[0]
+
+        qa_service = LazyResearchWorkflow(lambda: CitedQaService(get_retriever(), model, chunk_store=database))
+        plan_service = LazyResearchWorkflow(lambda: ResearchPlanService(get_retriever(), model, chunk_store=database))
         return ResearchAgentService(
             model=model,
             qa_service=qa_service,
