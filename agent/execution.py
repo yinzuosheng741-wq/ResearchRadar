@@ -61,6 +61,12 @@ def current_context() -> ExecutionContext | None:
     return _context.get()
 
 
+def check_deadline() -> None:
+    context = current_context()
+    if context is not None:
+        context.check_deadline()
+
+
 @contextmanager
 def execution_scope(context: ExecutionContext):
     token = _context.set(context)

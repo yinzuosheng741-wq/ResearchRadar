@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from time import perf_counter
 from typing import Protocol
 
+from agent.execution import ExecutionDenied, check_deadline
 from domain.models import EvidenceChunk
 from retrieval.query_expansion import plan_query
 
@@ -43,13 +44,17 @@ def search_branches(keyword, vector, query: str, *, k: int, paper_ids=None):
     """A broken provider must not discard the other branch's scoped evidence."""
     results, failures = [], []
     for name, retriever in (("keyword", keyword), ("vector", vector)):
+        check_deadline()
         try:
             chunks = retriever.search(query, k=k, paper_ids=paper_ids)
             results.append([c for c in chunks if paper_ids is None or c.paper_id in paper_ids])
+        except ExecutionDenied:
+            raise
         except Exception:
             # No raw provider exception, query or credentials in diagnostics.
             failures.append(name)
             results.append([])
+        check_deadline()
     if len(failures) == 2:
         raise RuntimeError("all_retrieval_branches_failed")
     return results[0], results[1], failures

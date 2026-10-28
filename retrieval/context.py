@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+from agent.execution import ExecutionDenied, check_deadline
 from domain.models import EvidenceChunk
 
 
@@ -26,9 +27,11 @@ def assemble_context(store, chunk_ids: list[str], *, paper_ids=None, max_chunks:
     """
     if max_chunks <= 0 or paper_ids == []:
         return [], ContextAudit()
+    check_deadline()
     requested = list(dict.fromkeys(chunk_ids))[:max_chunks]
     allowed = None if paper_ids is None else set(paper_ids)
     loaded = store.get_chunks_by_ids(requested) if canonical_chunks is None else canonical_chunks
+    check_deadline()
     canonical = {
         chunk.chunk_id: chunk
         for chunk in loaded
@@ -42,6 +45,7 @@ def assemble_context(store, chunk_ids: list[str], *, paper_ids=None, max_chunks:
     if callable(loader) and anchors and len(selected) < max_chunks:
         try:
             neighbors = loader([chunk.chunk_id for chunk in anchors], window=1)
+            check_deadline()
             for chunk in neighbors:
                 if chunk.paper_id not in anchor_papers:
                     continue
@@ -50,8 +54,11 @@ def assemble_context(store, chunk_ids: list[str], *, paper_ids=None, max_chunks:
                 selected.setdefault(chunk.chunk_id, chunk)
                 if len(selected) >= max_chunks:
                     break
+        except ExecutionDenied:
+            raise
         except Exception:
             failed = True
+        check_deadline()
     return list(selected.values()), ContextAudit(
         requested_anchors=len(requested), canonical_anchors=len(anchors),
         missing_anchors=len(requested) - len(anchors),

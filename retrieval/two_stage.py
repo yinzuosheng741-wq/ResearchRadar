@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import math
+from dataclasses import dataclass, field
 from time import perf_counter
 
+from agent.execution import ExecutionDenied
 from domain.models import EvidenceChunk
 from retrieval.hybrid import EvidenceRetriever, HybridRetriever, search_branches
 from retrieval.query_expansion import plan_query
@@ -164,6 +165,8 @@ class TwoStageRetriever:
                     candidate_k=self.chunk_candidate_k,
                     max_chunks_per_paper=self.max_chunks_per_paper,
                 ).search(query, k=k, paper_ids=paper_ids)
+            except ExecutionDenied:
+                raise
             except Exception:
                 # An optional recall branch must not erase valid scoped hits.
                 global_results = []
