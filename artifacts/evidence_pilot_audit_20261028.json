@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "consistent",
+  "scope": "annotation_integrity_not_model_quality",
+  "dataset_sha256": "fa31a3128da0e22e6eb9dff85b5c7a814f1d15574fcae9db0917176766b64c46",
+  "case_count": 8,
+  "split_counts": {
+    "development": 8
+  },
+  "answerability_counts": {
+    "answerable": 6,
+    "needs_clarification": 2
+  },
+  "unique_chunks_checked": 7,
+  "pdfs_checked": 2,
+  "independent_holdout_claimed": false,
+  "model_calls": 0,
+  "limitations": [
+    "Quote matching and fingerprints do not prove semantic answer support.",
+    "Review method and expected answer are annotations, not automatic expert certification."
+  ]
+}
