@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-28",
+  "reviewer": "codex-original-page-comparison-not-expert-certification",
+  "frozen_dataset_sha256": "fa31a3128da0e22e6eb9dff85b5c7a814f1d15574fcae9db0917176766b64c46",
+  "original_gold_unchanged": true,
+  "included_in_metrics": false,
+  "items": [
+    {
+      "case_id": "R-pilot-06",
+      "verdict": "accepted_alternative_for_variable_list",
+      "evidence": {
+        "chunk_id": "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p1:c1",
+        "paper_id": "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f",
+        "page_number": 1,
+        "chunk_sha256": "027d013a7e5aa2635696ed7cc826301639b4381e26ab03cbb5230e09719f7025",
+        "quote": "in situ data for six WQ variables:",
+        "source_group": "10.1038/s41597-025-05600-w",
+        "pdf_sha256": "fb57f3b4b1cc134710e1885ef0194d8ea82513d55f325f928a902fbe5603e8b8",
+        "locator": "PDF p1 / abstract / variable list"
+      },
+      "reason": "原页摘要明确列出相同六个水质变量，可作为该问题的替代段落；不支持超出列表的实验范围或性能结论。"
+    },
+    {
+      "case_id": "R-pilot-02",
+      "verdict": "related_partial_not_complete_methods_evidence",
+      "evidence": {
+        "chunk_id": "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c2",
+        "paper_id": "1e932f09-6aea-41ff-aa04-219a63e53258",
+        "page_number": 7,
+        "chunk_sha256": "93ef9aac0f7cc09c3a59f91a7dae6db7317f6f6a1f285c3ca0fee4c9d03d477e",
+        "quote": "Rrs_350, Rrs_351, …, Rrs_900",
+        "source_group": "10.1038/s41597-023-01973-y",
+        "pdf_sha256": "ba5706c34e920e59a8f9d03b36c97eaf119a29d21cc7bec470da9b7172cbc9c0",
+        "locator": "PDF p7 / Table 1 / GLORIA_Rrs.csv row"
+      },
+      "reason": "原表给出数据列名和范围，但不直接覆盖完整征集方法与质量保证条件，不据此替换原 Methods 金标准。"
+    }
+  ],
+  "limitations": [
+    "Only the two named PDF pages were visually checked in this review.",
+    "Rejected or unreviewed candidates do not prove that the rest of a paper lacks evidence.",
+    "Alternative evidence is recorded separately; original denominators and labels are unchanged."
+  ]
+}

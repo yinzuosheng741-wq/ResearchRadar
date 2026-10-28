@@ -1,0 +1,218 @@
+{
+  "date": "2026-10-28",
+  "scope": "keyword_only_development_diagnostics_not_independent_holdout",
+  "baseline_commit": "3827578234c4d259ef4b60314f7d46148bb6e981",
+  "corpus_fingerprint": "cfd16852805ccef4004f6f9dbec5cf70d5dd8e9ae67be092691395d37350cd52",
+  "pipeline_fingerprints": {
+    "retrieval/keyword_index.py": "e9cfb0cb8bbbf8477bed557f325007c8c804012f84625e8db2371749dd13b7ba",
+    "retrieval/lexical_plan.py": "11fef77a483c42130f734bff1d3c36341c8e131f5baab8b558a9b7f8c681b5d1",
+    "retrieval/query_expansion.py": "e2850e9f528aa96986a398fe3096ec8eebcdd11323e3352324fe38ac88eec153"
+  },
+  "existing_48": {
+    "dataset_sha256": "b0208362ace96e804ccc5ebb900b3f888c58cf4bfeb8d23a4c987bb268dc4784",
+    "question_count": 48,
+    "before": {
+      "evidence_group_recall_at_5": 0.65625,
+      "evidence_group_recall_at_20": 0.8125,
+      "paper_recall_at_5": 0.8229166666666666,
+      "paper_recall_at_20": 0.9166666666666666
+    },
+    "after": {
+      "evidence_group_recall_at_5": 0.65625,
+      "evidence_group_recall_at_20": 0.8125,
+      "paper_recall_at_5": 0.8229166666666666,
+      "paper_recall_at_20": 0.9166666666666666
+    },
+    "identical_rankings": true
+  },
+  "development_pilot": {
+    "dataset_sha256": "fa31a3128da0e22e6eb9dff85b5c7a814f1d15574fcae9db0917176766b64c46",
+    "before": {
+      "scope": "development_pilot_required_anchors_not_exhaustive_relevance",
+      "k": 5,
+      "evaluated_cases": 6,
+      "excluded_non_retrieval_cases": 2,
+      "retrieval_failed_cases": 0,
+      "mean_required_anchor_recall": 0.25,
+      "cases": [
+        {
+          "case_id": "R-pilot-01",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p9:c6",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c1",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p5:c5",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p6:c8",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c4"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-02",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c1",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c2",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p5:c5",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p9:c6",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c3"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-03",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c2",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c3",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c4",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c1",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c5"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-04",
+          "required_anchor_recall": 1.0,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p2:c5",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p1:c0",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p17:c1",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p18:c5",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p3:c5"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-05",
+          "required_anchor_recall": 0.5,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p6:c3",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p9:c2",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p8:c8",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p18:c2",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p3:c4"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-06",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p1:c0",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p4:c6",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p8:c8",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p4:c7",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p2:c5"
+          ],
+          "retrieval_failed": false
+        }
+      ]
+    },
+    "after": {
+      "scope": "development_pilot_required_anchors_not_exhaustive_relevance",
+      "k": 5,
+      "evaluated_cases": 6,
+      "excluded_non_retrieval_cases": 2,
+      "retrieval_failed_cases": 0,
+      "mean_required_anchor_recall": 0.4166666666666667,
+      "cases": [
+        {
+          "case_id": "R-pilot-01",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c1",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p7:c2",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p5:c5",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p4:c3",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p9:c6"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-02",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p4:c0",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c5",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c4",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c7",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c6"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-03",
+          "required_anchor_recall": 1.0,
+          "ranked_chunk_ids": [
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c3",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p2:c3",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p8:c0",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p2:c2",
+            "1e932f09-6aea-41ff-aa04-219a63e53258:p3:c1"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-04",
+          "required_anchor_recall": 1.0,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p3:c5",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p3:c6",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p15:c2",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p2:c5",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p1:c0"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-05",
+          "required_anchor_recall": 0.5,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p3:c4",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p6:c3",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p9:c2",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p8:c8",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p18:c2"
+          ],
+          "retrieval_failed": false
+        },
+        {
+          "case_id": "R-pilot-06",
+          "required_anchor_recall": 0.0,
+          "ranked_chunk_ids": [
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p9:c1",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p4:c7",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p17:c1",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p9:c2",
+            "80d102c1-a9b7-45d2-b47f-f2f1a5873d1f:p8:c7"
+          ],
+          "retrieval_failed": false
+        }
+      ]
+    }
+  },
+  "compatibility_decision": {
+    "initial_broader_trial": {
+      "evidence_group_recall_at_5": 0.6458333333333334,
+      "evidence_group_recall_at_20": 0.8125,
+      "paper_recall_at_5": 0.8229166666666666,
+      "paper_recall_at_20": 0.9166666666666666
+    },
+    "selected_policy": "Use focused rank fusion for recognized CJK facets; retain the non-focused compatibility path."
+  },
+  "focused_configuration": {
+    "rank_constant": 60,
+    "focused_weight": 2,
+    "original_weight": 1,
+    "max_branches": 5,
+    "max_sql_calls": 10,
+    "candidate_window": "min(100,max(k,20))"
+  },
+  "limitations": [
+    "Both task sets are development diagnostics, not independent user evaluation.",
+    "The pilot gold does not exhaust all valid alternative evidence.",
+    "No vector, reranker, paid model, answer-quality or production latency comparison.",
+    "Non-focused queries keep their historical BM25 merge behavior."
+  ]
+}
