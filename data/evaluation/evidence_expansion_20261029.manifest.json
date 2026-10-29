@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "evaluation_role": "development_pilot",
+  "reviewed_at": "2026-10-29",
+  "reviewer": "codex-original-page-comparison-not-expert-certification",
+  "dataset_sha256": "758d49da68efef661c967472c93e6b9336cc143e920488beef60e94b0ec83faf",
+  "case_count": 4,
+  "split_counts": {
+    "development": 4
+  },
+  "independent_holdout_claimed": false,
+  "reviewed_pdf_pages": {
+    "0fcf7cc2-b620-4151-a698-e381f3df8a4e": [
+      3
+    ],
+    "4e91713a-e18a-4142-900c-c05e30a8aadb": [
+      3,
+      4
+    ]
+  },
+  "original_drafts_modified": false,
+  "sources": [
+    {
+      "paper_id": "0fcf7cc2-b620-4151-a698-e381f3df8a4e",
+      "title": "A bio-optical database for the remote sensing of water quality in BRAZil coAstal and inland waters (BRAZA)",
+      "doi": "10.1038/s41597-025-05609-1",
+      "authors": [
+        "Daniel Andrade Maciel",
+        "Cláudio Clemente Faria Barbosa",
+        "Evlyn Márcia Leão de Moraes Novo",
+        "Raianny Leite do Nascimento Wanderley",
+        "Pedro Bacellar",
+        "Lohan Barbosa Baía",
+        "Henrique Bernini",
+        "Rafael G. Chasles",
+        "Áurea Maria Ciotti",
+        "Alice César Fassoni‐Andrade",
+        "Rogério Flores Júnior",
+        "Thainara M.A. Lima",
+        "Fernando Bezerra Lopes",
+        "Rogério Ribeiro Marinho",
+        "Anne H.S. Martinelli",
+        "Vitor S. Martins",
+        "Marcela Miranda",
+        "Gabriel Moiano Cesar",
+        "David da Motta Marques",
+        "Maurício Almeida Noernberg",
+        "Fernanda Helena Oliveira da Silva",
+        "Felipe Pacheco",
+        "Rejane S. Paulino",
+        "Waterloo Pereira Filho",
+        "Júlio César Pimenta dos Santos",
+        "Lino Augusto Sander de Carvalho",
+        "Marcio Sousa da Silva",
+        "Matheus Henrique Tavares",
+        "Marta Eichemberger Ummus",
+        "Aline M. Valério",
+        "Pedro Tadao Hamamoto Filho",
+        "Fernanda Watanabe",
+        "Rafaela C. Zem"
+      ],
+      "recorded_license": "cc-by-nc-nd",
+      "pdf_sha256": "6f850374ed84c4c624e7a27e074f5a0a9885be87e97b54cdbc920bdcb4ff8ecf"
+    },
+    {
+      "paper_id": "4e91713a-e18a-4142-900c-c05e30a8aadb",
+      "title": "A Chlorophyll-a Algorithm for Landsat-8 Based on Mixture Density Networks",
+      "doi": "10.3389/frsen.2020.623678",
+      "authors": [
+        "Brandon Smith",
+        "Nima Pahlevan",
+        "John F. Schalles",
+        "Steven A. Ruberg",
+        "Reagan M. Errera",
+        "Ronghua Ma",
+        "Claudia Giardino",
+        "Mariano Bresciani",
+        "Cláudio Clemente Faria Barbosa",
+        "Tim Moore",
+        "Virginia Laura Fernández",
+        "Krista Alikas",
+        "Kersti Kangro"
+      ],
+      "recorded_license": "cc-by",
+      "pdf_sha256": "35244d43a01e48068ea1cba6ca2e6dd7ff712287b35d9f59a938ecebf6d4dadd"
+    }
+  ],
+  "limitations": [
+    "Purposive annotations after corpus inspection, not an independent holdout.",
+    "Only the declared three pages were visually compared; not full-paper certification.",
+    "Full papers, page images and database are not redistributed.",
+    "Labels do not exhaust all potentially relevant evidence."
+  ]
+}

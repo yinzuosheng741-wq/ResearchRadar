@@ -10,9 +10,9 @@ from datetime import date
 from pathlib import Path
 from typing import Annotated, Literal
 
-from domain.models import EvidenceChunk
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
+from domain.models import EvidenceChunk
 from evaluation.corpus_audit import ReadOnlyCorpus
 from evaluation.metrics import recall_at_k
 
@@ -103,6 +103,12 @@ def load_cases(path: Path) -> list[EvidenceCase]:
         raise AnnotationError("annotation_dataset_invalid") from None
     if not cases:
         raise AnnotationError("annotation_dataset_empty")
+    _validate_case_collection(cases)
+    return cases
+
+
+def _validate_case_collection(cases: list[EvidenceCase]) -> None:
+    """Apply the same identity and split rules within and across dataset files."""
     if len({case.case_id for case in cases}) != len(cases) or len({" ".join(case.question.split()).casefold() for case in cases}) != len(cases):
         raise AnnotationError("annotation_dataset_duplicate")
     groups: dict[str, str] = {}
@@ -128,7 +134,29 @@ def load_cases(path: Path) -> list[EvidenceCase]:
             if anchor.paper_id in papers and papers[anchor.paper_id] != identity:
                 raise AnnotationError("annotation_paper_identity_or_split_mismatch")
             papers[anchor.paper_id] = identity
-    return cases
+
+
+def audit_case_collection(paths: list[Path]) -> dict:
+    """Check cross-file leakage; this does not certify the reference PDFs or gold."""
+    if not paths or len(paths) > 16:
+        raise AnnotationError("annotation_collection_size_invalid")
+    resolved = [path.resolve() for path in paths]
+    if len(set(resolved)) != len(resolved):
+        raise AnnotationError("annotation_collection_duplicate_path")
+    cases, datasets = [], []
+    for path in paths:
+        loaded = load_cases(path)
+        cases.extend(loaded)
+        if len(cases) > 10000:
+            raise AnnotationError("annotation_collection_too_large")
+        datasets.append({"dataset_sha256": _cases_hash(loaded), "case_count": len(loaded)})
+    _validate_case_collection(cases)
+    return {"scope": "cross_file_identity_and_split_integrity_not_evidence_quality",
+            "status": "consistent", "datasets": datasets, "case_count": len(cases),
+            "source_group_count": len({group.casefold() for c in cases for group in c.source_groups
+                                       if group.casefold().startswith("10.")}),
+            "split_counts": dict(Counter(c.split for c in cases)),
+            "independent_holdout_claimed": False}
 
 
 def cases_hash(path: Path) -> str:
@@ -246,11 +274,17 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--database", type=Path, required=True)
     parser.add_argument("--papers-dir", type=Path)
+    parser.add_argument("--reference-dataset", type=Path, action="append", default=[],
+                        help="check cross-file split leakage; reference files are not scored")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--keyword-baseline", action="store_true", help="also run local scoped FTS5; no model or embeddings")
     args = parser.parse_args()
     try:
         report = audit_cases(args.dataset, args.manifest, _ReadOnlyChunks(args.database), papers_dir=args.papers_dir)
+        if args.reference_dataset:
+            report["dataset_collection"] = audit_case_collection([args.dataset, *args.reference_dataset])
+            if report["dataset_collection"]["datasets"][0]["dataset_sha256"] != report["dataset_sha256"]:
+                raise AnnotationError("annotation_manifest_drift")
         if args.keyword_baseline:
             from retrieval.keyword_index import KeywordIndex
 

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "consistent",
+  "scope": "annotation_integrity_not_model_quality",
+  "dataset_sha256": "758d49da68efef661c967472c93e6b9336cc143e920488beef60e94b0ec83faf",
+  "case_count": 4,
+  "split_counts": {
+    "development": 4
+  },
+  "answerability_counts": {
+    "answerable": 4
+  },
+  "unique_chunks_checked": 4,
+  "pdfs_checked": 2,
+  "independent_holdout_claimed": false,
+  "model_calls": 0,
+  "limitations": [
+    "Quote matching and fingerprints do not prove semantic answer support.",
+    "Review method and expected answer are annotations, not automatic expert certification."
+  ],
+  "dataset_collection": {
+    "scope": "cross_file_identity_and_split_integrity_not_evidence_quality",
+    "status": "consistent",
+    "datasets": [
+      {
+        "dataset_sha256": "758d49da68efef661c967472c93e6b9336cc143e920488beef60e94b0ec83faf",
+        "case_count": 4
+      },
+      {
+        "dataset_sha256": "fa31a3128da0e22e6eb9dff85b5c7a814f1d15574fcae9db0917176766b64c46",
+        "case_count": 8
+      }
+    ],
+    "case_count": 12,
+    "source_group_count": 4,
+    "split_counts": {
+      "development": 12
+    },
+    "independent_holdout_claimed": false
+  },
+  "keyword_baseline": {
+    "scope": "development_pilot_required_anchors_not_exhaustive_relevance",
+    "k": 5,
+    "evaluated_cases": 4,
+    "excluded_non_retrieval_cases": 0,
+    "retrieval_failed_cases": 0,
+    "mean_required_anchor_recall": 0.25,
+    "cases": [
+      {
+        "case_id": "R-expansion-01",
+        "required_anchor_recall": 0.0,
+        "ranked_chunk_ids": [
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p7:c1",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p3:c1",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p13:c1",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p7:c3",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p11:c3"
+        ],
+        "retrieval_failed": false
+      },
+      {
+        "case_id": "R-expansion-02",
+        "required_anchor_recall": 0.0,
+        "ranked_chunk_ids": [
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p3:c5",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p13:c9",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p7:c1",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p3:c1",
+          "0fcf7cc2-b620-4151-a698-e381f3df8a4e:p11:c3"
+        ],
+        "retrieval_failed": false
+      },
+      {
+        "case_id": "R-expansion-03",
+        "required_anchor_recall": 0.0,
+        "ranked_chunk_ids": [
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p4:c2",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p5:c8",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p3:c4",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p2:c9",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p14:c8"
+        ],
+        "retrieval_failed": false
+      },
+      {
+        "case_id": "R-expansion-04",
+        "required_anchor_recall": 1.0,
+        "ranked_chunk_ids": [
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p3:c2",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p4:c0",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p7:c2",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p3:c4",
+          "4e91713a-e18a-4142-900c-c05e30a8aadb:p2:c9"
+        ],
+        "retrieval_failed": false
+      }
+    ]
+  }
+}
